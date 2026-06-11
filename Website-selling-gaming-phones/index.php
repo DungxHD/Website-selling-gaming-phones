@@ -10,7 +10,7 @@ session_start();
 // - Render View
 
 // Bạn đang học MVC nên mình giữ mọi thứ thật gọn:
-// - Views: Views/frontend và Views/backend (chỉ hiển thị)
+// - Views: Views/frontend và Views/backend (chỉ hiển thị).
 
 require_once __DIR__ . '/Controllers/FrontendController.php';
 require_once __DIR__ . '/helpers.php';
