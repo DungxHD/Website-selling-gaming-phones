@@ -1,19 +1,6 @@
 <?php
 require_once __DIR__ . '/../Models/Product.php';
 
-// =========================================================
-// CONTROLLER FRONTEND (Đơn giản nhất)
-// =========================================================
-// Nhiệm vụ Controller:
-// - Nhận request (đọc $_GET/$_POST)
-// - Gọi Model để lấy dữ liệu
-// - Trả về: view + data để index.php render
-//
-// Khi bạn làm ASM tiếp, bạn có thể tách thêm controller:
-// - AuthController: đăng nhập/đăng ký
-// - CartController: giỏ hàng
-// - AdminController: quản trị
-
 class FrontendController
 {
     public function __construct(
@@ -27,32 +14,36 @@ class FrontendController
             'view' => 'frontend/home.php',
             'data' => [
                 // Trang chủ đang dùng giao diện có nhiều block.
-                // Bạn mới học nên tạm truyền dữ liệu tối giản: danh sách sản phẩm mới nhất.
-                'products' => $this->productModel->getAll(12),
+                'products'    => $this->productModel->getAll(12),
+                
+                // ✅ THÊM DÒNG NÀY: Lấy sản phẩm bán chạy nhất
+                'bestSellers' => $this->productModel->getBestSellers(8),
+                
+                // Nếu view cần thêm các biến khác (deals, hotProducts...), thêm tại đây:
+                // 'deals'       => $this->productModel->getDeals(5),
+                // 'hotProducts' => $this->productModel->getHotProducts(8),
             ],
         ];
     }
 
     public function shop(): array
     {
-        // Lấy dữ liệu lọc cơ bản từ URL (đơn giản nhất)
         $filters = [
             'keyword' => trim($_GET['q'] ?? ''),
-            'brand' => trim($_GET['brand'] ?? ''),
+            'brand'   => trim($_GET['brand'] ?? ''),
         ];
 
         return [
             'view' => 'frontend/shop.php',
             'data' => [
-                'filters' => $filters,
-                'brands' => $this->productModel->getBrands(),
-                'products' => $this->productModel->search($filters['keyword'], $filters['brand'], 200),
+                'filters'    => $filters,
+                'brands'     => $this->productModel->getBrands(),
+                'products'   => $this->productModel->search($filters['keyword'], $filters['brand'], 200),
                 'pagination' => [
-                    // Chưa làm phân trang để code dễ hiểu (bạn có thể làm ở bước tiếp theo)
-                    'current' => 1,
+                    'current'    => 1,
                     'totalPages' => 1,
-                    'basePage' => 'shop',
-                    'query' => $filters,
+                    'basePage'   => 'shop',
+                    'query'      => $filters,
                 ],
             ],
         ];
@@ -65,9 +56,9 @@ class FrontendController
             return [
                 'view' => 'frontend/shop.php',
                 'data' => [
-                    'filters' => ['keyword' => '', 'brand' => ''],
-                    'brands' => $this->productModel->getBrands(),
-                    'products' => $this->productModel->getAll(20),
+                    'filters'    => ['keyword' => '', 'brand' => ''],
+                    'brands'     => $this->productModel->getBrands(),
+                    'products'   => $this->productModel->getAll(20),
                     'pagination' => ['current' => 1, 'totalPages' => 1, 'basePage' => 'shop', 'query' => []],
                 ],
             ];
@@ -78,9 +69,10 @@ class FrontendController
         return [
             'view' => 'frontend/detail.php',
             'data' => [
-                'product' => $product,
+                'product'         => $product,
                 'relatedProducts' => $related,
             ],
         ];
     }
+    // ❌ ĐÃ XÓA đoạn code sai bạn thêm ở đây
 }
