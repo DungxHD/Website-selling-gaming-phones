@@ -5,8 +5,7 @@ class FrontendController
 {
     public function __construct(
         private Product $productModel = new Product()
-    ) {
-    }
+    ) {}
 
     public function home(): array
     {
@@ -14,14 +13,9 @@ class FrontendController
             'view' => 'frontend/home.php',
             'data' => [
                 // Trang chủ đang dùng giao diện có nhiều block.
-                'products'    => $this->productModel->getAll(12),
-                
-                // ✅ THÊM DÒNG NÀY: Lấy sản phẩm bán chạy nhất
-                'bestSellers' => $this->productModel->getBestSellers(8),
-                
-                // Nếu view cần thêm các biến khác (deals, hotProducts...), thêm tại đây:
-                // 'deals'       => $this->productModel->getDeals(5),
-                // 'hotProducts' => $this->productModel->getHotProducts(8),
+                // Bạn mới học nên tạm truyền dữ liệu tối giản: danh sách sản phẩm mới nhất.
+                'products' => $this->productModel->getAll(8),
+                'hotProducts' => $this->productModel->getHotproduct(),
             ],
         ];
     }
