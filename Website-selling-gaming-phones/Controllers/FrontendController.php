@@ -13,6 +13,9 @@ class FrontendController
             'view' => 'frontend/home.php',
             'data' => [
                 // Trang chủ đang dùng giao diện có nhiều block.
+                
+                // ✅ THÊM DÒNG NÀY: Lấy sản phẩm bán chạy nhất
+                'bestSellers' => $this->productModel->getBestSellers(8),
                 // Bạn mới học nên tạm truyền dữ liệu tối giản: danh sách sản phẩm mới nhất.
                 'products' => $this->productModel->getAll(8),
                 'hotProducts' => $this->productModel->getHotproduct(),

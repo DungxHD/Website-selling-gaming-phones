@@ -72,17 +72,17 @@ class Product
         return $statement->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    // sản phẩm bán chạy nhất
+    // sản phẩm bán chạy nhất 
     public function getBestSellers(int $limit = 8): array
     {
-        $sql = "SELECT * FROM products 
-                ORDER BY sales DESC 
-                LIMIT :limit";
-        
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM products
+        ORDER BY sales DESC
+        LIMIT :limit";
+
+        $sql = $this->pdo->prepare($sql);
+        $sql->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $sql->execute();
+
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 }
