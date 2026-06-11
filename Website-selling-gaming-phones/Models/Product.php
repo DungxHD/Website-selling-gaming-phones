@@ -1,17 +1,6 @@
 <?php
 require_once __DIR__ . '/Database.php';
 
-// =========================================================
-// MODEL PRODUCT (PDO - đơn giản nhất)
-// =========================================================
-// Nhiệm vụ của Model:
-// - Lấy dữ liệu từ bảng `products` và trả về dạng mảng cho Controller.
-// - Không in HTML ở đây.
-//
-// Bạn sẽ làm ASM tiếp bằng cách mở rộng model này:
-// - Thêm: create(), update(), delete()
-// - Thêm lọc: giá, tình trạng máy, sắp xếp...
-
 class Product
 {
     private PDO $pdo;
@@ -80,5 +69,19 @@ class Product
     {
         $statement = $this->pdo->query('SELECT DISTINCT brand FROM products WHERE brand <> "" ORDER BY brand ASC');
         return $statement->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    
+    public function getBestSellers(int $limit = 8): array
+    {
+        $sql = "SELECT * FROM products 
+                ORDER BY sales DESC 
+                LIMIT :limit";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

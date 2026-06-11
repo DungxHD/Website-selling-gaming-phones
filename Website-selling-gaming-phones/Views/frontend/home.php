@@ -91,22 +91,22 @@ $hero = $deals[0] ?? $products[0] ?? null;
             </section>
         <?php endif; ?>
 
-        <section class="section-block compact">
-            <div class="container">
-                <div class="section-heading">
-                    <div>
-                        <span class="eyebrow">Bán chạy</span>
-                        <h2>Sản phẩm được mua nhiều</h2>
-                    </div>
-                    <a href="index.php?page=shop&sort=sales" class="text-link">Xem tất cả <i class="fa-solid fa-arrow-right"></i></a>
+    <section class="section-block compact">
+        <div class="container">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">Bán chạy</span>
+                    <h2>Sản phẩm được mua nhiều</h2>
                 </div>
-                <div class="product-grid">
-                    <?php foreach ($bestSellers as $product): ?>
-                        <?php render_product_card($product, 'index.php?page=home'); ?>
-                    <?php endforeach; ?>
-                </div>
+                <a href="index.php?page=shop&sort=sales" class="text-link">Xem tất cả <i class="fa-solid fa-arrow-right"></i></a>
             </div>
-        </section>
+            <div class="product-grid">
+                <?php foreach ($bestSellers as $product): ?>
+                    <?php render_product_card($product, 'index.php?page=home'); ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
 
         <section class="section-block tinted">
             <div class="container">

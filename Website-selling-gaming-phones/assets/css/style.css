@@ -507,7 +507,9 @@ body.dark-mode .site-header {
     font-size: 0.78rem;
     font-weight: 800;
 }
-
+.product-badge {
+    z-index: 1;
+}
 .section-block {
     padding: 54px 0;
 }
