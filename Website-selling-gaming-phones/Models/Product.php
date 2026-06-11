@@ -56,13 +56,14 @@ class Product
         return $statement->fetch();
     }
 
+    // Thương hiệu
     public function getBrands(): array
     {
         $statement = $this->pdo->query('SELECT DISTINCT brand FROM products WHERE brand <> "" ORDER BY brand ASC');
         return $statement->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    
+    // sản phẩm bán chạy nhất
     public function getBestSellers(int $limit = 8): array
     {
         $sql = "SELECT * FROM products 
