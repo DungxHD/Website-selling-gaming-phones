@@ -15,6 +15,7 @@ session_start();
 // - Views: Views/frontend và Views/backend (chỉ hiển thị)
 // Giang rồnggggggggggg hẹ hẹ
 // Dũng trọc hà đông
+// địt mẹ đời
 require_once __DIR__ . '/Models/Database.php';
 require_once __DIR__ . '/Models/Product.php';
 require_once __DIR__ . '/Controllers/FrontendController.php';
