@@ -28,6 +28,15 @@ class Product
         $statement->execute();
         return $statement->fetchAll();
     }
+    public function getHotproduct(): array
+    {
+        $keys = array_rand($this->getAll(), 4);
+        $hotProducts = [];
+        foreach ($keys as $k) {
+            $hotProducts[] = $this->getAll()[$k];
+        }
+        return $hotProducts;
+    }
 
     public function search(string $keyword = '', string $brand = '', int $limit = 200): array
     {

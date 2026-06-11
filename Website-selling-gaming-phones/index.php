@@ -1,6 +1,6 @@
 <?php
 session_start();
-// Dũng đã hoàn thành rồi nhé...
+
 // =========================================================
 // FRONT CONTROLLER (Router tối giản)
 // =========================================================
@@ -8,16 +8,10 @@ session_start();
 // - Nhận mọi request qua index.php?page=...
 // - Gọi Controller để lấy dữ liệu
 // - Render View
-// Hoàn thành Ginag 
+
 // Bạn đang học MVC nên mình giữ mọi thứ thật gọn:
-// - Models: Models/Database.php, Models/Product.php
-// - Controllers: Controllers/FrontendController.php
 // - Views: Views/frontend và Views/backend (chỉ hiển thị)
-// Giang rồnggggggggggg hẹ hẹ
-// Dũng trọc hà đông
-// địt mẹ đời
-require_once __DIR__ . '/Models/Database.php';
-require_once __DIR__ . '/Models/Product.php';
+
 require_once __DIR__ . '/Controllers/FrontendController.php';
 require_once __DIR__ . '/helpers.php';
 

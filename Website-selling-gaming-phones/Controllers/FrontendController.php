@@ -28,7 +28,8 @@ class FrontendController
             'data' => [
                 // Trang chủ đang dùng giao diện có nhiều block.
                 // Bạn mới học nên tạm truyền dữ liệu tối giản: danh sách sản phẩm mới nhất.
-                'products' => $this->productModel->getAll(12),
+                'products' => $this->productModel->getAll(8),
+                'hotProducts' => $this->productModel->getHotproduct(),
             ],
         ];
     }
