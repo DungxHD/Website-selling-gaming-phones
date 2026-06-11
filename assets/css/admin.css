@@ -1,0 +1,585 @@
+.admin-body,
+.admin-login-body {
+    background: #f3f6f8;
+}
+
+.admin-layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr);
+}
+
+.admin-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 22px;
+    color: #dbe4ee;
+    background: #111827;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.admin-brand span {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: var(--primary);
+}
+
+.admin-profile {
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.admin-profile strong,
+.admin-profile span {
+    display: block;
+}
+
+.admin-profile span {
+    color: #aeb9c7;
+    font-size: 0.86rem;
+}
+
+.admin-sidebar nav {
+    display: grid;
+    gap: 8px;
+}
+
+.admin-sidebar nav a,
+.admin-sidebar-footer a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 8px;
+    color: #cbd5e1;
+    font-weight: 800;
+}
+
+.admin-sidebar nav a:hover,
+.admin-sidebar nav a.active,
+.admin-sidebar-footer a:hover {
+    color: #fff;
+    background: rgba(0, 109, 119, 0.42);
+}
+
+.admin-sidebar-footer {
+    display: grid;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.admin-main {
+    min-width: 0;
+    padding: 28px;
+}
+
+.admin-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.admin-top h1 {
+    margin: 6px 0 0;
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.admin-stats article,
+.order-kanban article,
+.admin-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    box-shadow: 0 8px 20px rgba(16, 24, 40, 0.06);
+}
+
+.admin-stats article {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+}
+
+.admin-stats span {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    color: #fff;
+    background: var(--primary);
+}
+
+.admin-stats strong {
+    display: block;
+    font-size: 1.35rem;
+    color: var(--ink);
+}
+
+.admin-stats p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.7fr);
+    gap: 18px;
+}
+
+.admin-card {
+    padding: 18px;
+}
+
+.admin-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.admin-card h2,
+.admin-card-head h2 {
+    margin: 0;
+    font-family: var(--font-head);
+    font-size: 1.7rem;
+}
+
+.admin-card-head a,
+.admin-card-head span {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.admin-table-wrap {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.admin-table th {
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.admin-product-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 240px;
+}
+
+.admin-product-cell img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: var(--surface-2);
+}
+
+.admin-product-cell span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.status-list {
+    display: grid;
+    gap: 12px;
+}
+
+.status-list div {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--soft);
+}
+
+.status-list strong {
+    grid-column: 2;
+}
+
+.status-list p {
+    grid-column: 2;
+    margin: 2px 0 0;
+    color: var(--muted);
+}
+
+.status-dot {
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    border-radius: 999px;
+    margin-top: 7px;
+}
+
+.status-dot.green {
+    background: var(--success);
+}
+
+.status-dot.blue {
+    background: var(--blue);
+}
+
+.status-dot.amber {
+    background: var(--warning);
+}
+
+.admin-form-card {
+    margin-bottom: 18px;
+}
+
+.admin-product-form {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(4, minmax(130px, 1fr)) auto;
+    gap: 12px;
+    align-items: end;
+}
+
+.admin-product-form label {
+    display: grid;
+    gap: 6px;
+    color: var(--muted);
+    font-weight: 800;
+}
+
+.admin-product-form input,
+.admin-product-form select {
+    min-height: 42px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: var(--ink);
+    background: var(--surface);
+}
+
+.stock-pill,
+.role-pill,
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 0.82rem;
+}
+
+.stock-pill {
+    color: var(--primary);
+    background: rgba(0, 109, 119, 0.12);
+}
+
+.role-pill.admin {
+    color: var(--accent);
+    background: rgba(239, 35, 60, 0.12);
+}
+
+.role-pill.user,
+.status-pill.active {
+    color: var(--success);
+    background: rgba(22, 163, 74, 0.12);
+}
+
+.admin-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.admin-actions button {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--ink);
+    background: var(--surface);
+    cursor: pointer;
+}
+
+.admin-actions button:hover {
+    color: #fff;
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.admin-actions button.danger:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.order-kanban {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.order-kanban article {
+    padding: 18px;
+}
+
+.order-kanban strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 1.1rem;
+}
+
+.order-kanban p {
+    margin: 4px 0 0;
+    color: var(--muted);
+}
+
+.empty-admin {
+    padding: 48px 18px;
+    text-align: center;
+}
+
+.empty-admin i {
+    color: var(--primary);
+    font-size: 2.4rem;
+}
+
+.empty-admin p {
+    max-width: 620px;
+    margin: 8px auto 0;
+    color: var(--muted);
+}
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 220px;
+}
+
+.user-cell > span {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    color: #fff;
+    background: var(--primary);
+    font-weight: 900;
+}
+
+.user-cell small {
+    display: block;
+    color: var(--muted);
+}
+
+.admin-login-shell {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background:
+        linear-gradient(135deg, rgba(0, 109, 119, 0.16), rgba(239, 35, 60, 0.12)),
+        #111827;
+}
+
+.admin-login-card {
+    width: min(430px, 100%);
+    padding: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+.admin-login-heading {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-login-heading span {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 10px;
+    border-radius: 8px;
+    color: #fff;
+    background: var(--primary);
+}
+
+.admin-login-heading h1 {
+    margin: 0;
+    font-family: var(--font-head);
+    font-size: 2.4rem;
+}
+
+.admin-login-heading p {
+    margin: 6px 0 0;
+    color: var(--muted);
+}
+
+.admin-login-form {
+    display: grid;
+    gap: 14px;
+}
+
+.admin-login-form label {
+    display: grid;
+    gap: 6px;
+}
+
+.centered {
+    justify-content: center;
+}
+
+@media (max-width: 1100px) {
+    .admin-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-sidebar {
+        position: static;
+        height: auto;
+    }
+
+    .admin-sidebar nav,
+    .admin-sidebar-footer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-stats,
+    .admin-grid,
+    .admin-product-form,
+    .order-kanban {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .admin-main {
+        padding: 18px 12px;
+    }
+
+    .admin-top {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-stats,
+    .admin-grid,
+    .admin-product-form,
+    .order-kanban,
+    .admin-sidebar nav,
+    .admin-sidebar-footer {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-product-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-product-form .wide-field {
+    grid-column: 1 / -1;
+}
+
+.admin-textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.admin-actions-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-actions-inline form {
+    margin: 0;
+}
+
+.inline-order-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inline-order-form select {
+    min-width: 130px;
+}
+
+.status-pill.locked {
+    color: var(--accent);
+    background: rgba(239, 35, 60, 0.12);
+}
+
+.order-status.new,
+.order-status.confirmed {
+    color: #b45309;
+    background: rgba(245, 158, 11, 0.16);
+}
+
+.order-status.shipping {
+    color: var(--blue);
+    background: rgba(37, 99, 235, 0.14);
+}
+
+.order-status.completed {
+    color: var(--success);
+    background: rgba(22, 163, 74, 0.12);
+}
+
+.order-status.cancelled {
+    color: var(--accent);
+    background: rgba(239, 35, 60, 0.12);
+}
