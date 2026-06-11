@@ -13,7 +13,7 @@ session_start();
 // - Models: Models/Database.php, Models/Product.php
 // - Controllers: Controllers/FrontendController.php
 // - Views: Views/frontend và Views/backend (chỉ hiển thị)
-// Giang rồnggggggggggg
+// Giang rồnggggggggggg hẹ hẹ
 // Dũng trọc hà đông
 require_once __DIR__ . '/Models/Database.php';
 require_once __DIR__ . '/Models/Product.php';
