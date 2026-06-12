@@ -1,6 +1,7 @@
 <?php
 // Hàm chuyển hướng trang
-function redirect_to(string $url): void {
+function redirect_to(string $url): void
+{
     header("Location: $url");
     exit();
 }
@@ -72,7 +73,7 @@ function render_product_card(array $product, string $returnUrl = ''): void
     if (mb_strlen($tagline) > 92) {
         $tagline = mb_substr($tagline, 0, 92) . '...';
     }
-    ?>
+?>
     <article class="product-card">
         <div class="product-media">
             <span class="product-badge"><?= e(condition_label($condition)) ?></span>
@@ -94,7 +95,7 @@ function render_product_card(array $product, string $returnUrl = ''): void
                 <span><i class="fa-solid fa-bolt"></i><?= e($charger) ?></span>
             </div>
             <div class="product-bottom">
-                <strong ><?= e(format_vnd($price)) ?></strong>
+                <strong><?= e(format_vnd($price)) ?></strong>
                 <?php if ($isOutOfStock): ?>
                     <span class="stock-state stock-out">Hết hàng</span>
                 <?php else: ?>
@@ -114,16 +115,18 @@ function render_product_card(array $product, string $returnUrl = ''): void
             </div>
         </div>
     </article>
-    <?php
+<?php
 }
 
 // Hàm tạo thông báo Flash Session
-function flash(string $type, string $message): void {
+function flash(string $type, string $message): void
+{
     $_SESSION['flash'][$type] = $message;
 }
 
 // Hàm yêu cầu đăng nhập
-function require_user_login(): void {
+function require_user_login(): void
+{
     if (empty($_SESSION['user'])) {
         flash('error', 'Vui lòng đăng nhập để tiếp tục.');
         redirect_to('index.php?page=login');
@@ -131,7 +134,8 @@ function require_user_login(): void {
 }
 
 // Hàm giả lập tính toán giỏ hàng
-function build_cart_rows($productModel): array {
+function build_cart_rows($productModel): array
+{
     $cart = $_SESSION['cart'] ?? [];
     $items = [];
     foreach ($cart as $id => $quantity) {
@@ -145,5 +149,49 @@ function build_cart_rows($productModel): array {
         }
     }
     return $items;
+}
+
+/**
+ * Hàm dịch trạng thái đơn hàng từ tiếng Anh sang tiếng Việt
+ * Dùng ở trang Dashboard Admin và trang Chi tiết đơn hàng
+ */
+function order_status_label(string $status): string
+{
+    return match ($status) {
+        'pending'   => 'Chờ xử lý',
+        'confirmed' => 'Đã xác nhận',
+        'shipping'  => 'Đang giao hàng',
+        'completed' => 'Hoàn tất',
+        'cancelled' => 'Đã hủy',
+        default     => 'Không xác định',
+    };
+}
+
+/**
+ * Hàm trả về tên class CSS tương ứng với trạng thái đơn hàng
+ * Dùng để tô màu cho dấu chấm tròn (status-dot) hoặc badge
+ */
+function order_status_color(string $status): string
+{
+    return match ($status) {
+        'completed'           => 'green',
+        'shipping', 'confirmed' => 'blue',
+        'cancelled'           => 'red',
+        default               => 'amber', // pending
+    };
+}
+
+/**
+ * Hàm đếm tổng số lượng sản phẩm có trong giỏ hàng
+ * Dùng để hiển thị badge số lượng trên Header
+ */
+function cart_items_count(): int
+{
+    $cart = $_SESSION['cart'] ?? [];
+    $count = 0;
+    foreach ($cart as $quantity) {
+        $count += (int)$quantity;
+    }
+    return $count;
 }
 ?>

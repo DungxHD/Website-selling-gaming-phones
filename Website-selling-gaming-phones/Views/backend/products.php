@@ -33,7 +33,7 @@ $editingProduct = $data['editingProduct'] ?? null;
             <?php endif; ?>
             <section class="admin-card admin-form-card">
                 <h2><?= $editingProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm' ?></h2>
-                <form class="admin-product-form mt-4" method="post" action="index.php?page=admin_products&action=admin_product_save">
+                <form class="admin-product-form mt-4" method="post" action="index.php?page=admin_add_products">
                     <input type="hidden" name="id" value="<?= (int)($editingProduct['id'] ?? 0) ?>">
 
                     <div class="form-section mb-5">
