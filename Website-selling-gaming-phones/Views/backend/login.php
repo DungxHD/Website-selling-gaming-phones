@@ -17,7 +17,7 @@
         <div class="admin-login-heading">
             <span><i class="fa-solid fa-shield-halved"></i></span>
             <h1>Admin Portal</h1>
-            <p>Trang này chỉ nên truy cập bằng URL quản trị riêng và chỉ chấp nhận tài khoản có role admin trong bảng <code>users</code>.</p>
+            <p>Đăng nhập để sử dụng dịch vụ dành riêng cho admin.</p>
         </div>
 
         <?php if (!empty($data['flash'])): ?>
