@@ -109,7 +109,7 @@ $shared = [
     'page' => $page,
     'cartCount' => cart_items_count(),
     'currentUser' => $_SESSION['user'] ?? null,
-    'currentAdmin' => $_SESSION['admin'] ?? null,
+    'currentAdmin' => $_SESSION['admin'] ?? null, 
     'flash' => $flash,
 ];
 
