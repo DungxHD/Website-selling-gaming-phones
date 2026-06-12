@@ -73,7 +73,7 @@ class AdminController
                 $rating,
                 $cpu,
                 $ram,
-$rom,
+                $rom,
                 $screen,
                 $battery,
                 $charger,
