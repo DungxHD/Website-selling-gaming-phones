@@ -24,6 +24,7 @@ $editingProduct = $data['editingProduct'] ?? null;
                 <div>
                     <span class="eyebrow">CRUD</span>
                     <h1>Quản lý sản phẩm</h1>
+                    <p class="admin-page-note">Thêm, sửa và kiểm tra danh sách sản phẩm bằng giao diện đơn giản, ưu tiên thao tác nhanh và dễ nhìn.</p>
                 </div>
                 <a class="btn btn-primary" href="index.php?page=admin_products"><i class="fa-solid fa-plus"></i> Thêm sản phẩm mới</a>
             </div>

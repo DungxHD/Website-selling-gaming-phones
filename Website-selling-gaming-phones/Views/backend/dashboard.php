@@ -23,6 +23,7 @@ $latestOrders = $data['latestOrders'] ?? [];
             <div>
                 <span class="eyebrow">Bảng điều khiển</span>
                 <h1>Thống kê tổng quan</h1>
+                <p class="admin-page-note">Theo dõi nhanh tình trạng sản phẩm, đơn hàng, người dùng và doanh thu ngay trên một màn hình.</p>
             </div>
             <a href="index.php?page=admin_products" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Quản lý sản phẩm</a>
         </div>

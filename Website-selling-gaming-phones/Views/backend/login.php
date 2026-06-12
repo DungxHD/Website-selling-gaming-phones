@@ -12,7 +12,7 @@
 </head>
 <body class="admin-login-body">
 <main class="admin-login-shell">
-    <section class="admin-login-card reveal-on-scroll">
+    <section class="admin-login-card">
         <a class="back-link" href="index.php?page=home"><i class="fa-solid fa-arrow-left"></i> Về trang chủ</a>
         <div class="admin-login-heading">
             <span><i class="fa-solid fa-shield-halved"></i></span>

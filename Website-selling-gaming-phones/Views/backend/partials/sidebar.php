@@ -19,6 +19,6 @@ $admin = $data['currentAdmin'] ?? null;
     </nav>
     <div class="admin-sidebar-footer">
         <a href="index.php?page=home"><i class="fa-solid fa-house"></i> Về website</a>
-        <a href="index.php?page=admin_logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất admin</a>
+        <a href="index.php?page=admin_logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
     </div>
 </aside>

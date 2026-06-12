@@ -68,13 +68,12 @@ class AdminController
             'data' => []
         ];
     }
-
     public function products(): array
     {
         return [
             'view' => 'backend/products.php',
             'data' => [
-                'products'       => $this->productModel->getAll(1000),
+                'products'       => $this->productModel->getAll(100),
                 'editingProduct' => isset($_GET['edit']) ? $this->productModel->getById((int)$_GET['edit']) : null
             ]
         ];

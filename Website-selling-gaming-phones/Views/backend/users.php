@@ -19,6 +19,7 @@
             <div>
                 <span class="eyebrow">Tài khoản</span>
                 <h1>Quản lý người dùng</h1>
+                <p class="admin-page-note">Xem nhanh thông tin tài khoản và khóa hoặc mở khóa người dùng bằng các thao tác cơ bản.</p>
             </div>
             <button class="btn btn-soft" type="button"><i class="fa-solid fa-user-lock"></i> Khóa / mở tài khoản</button>
         </div>

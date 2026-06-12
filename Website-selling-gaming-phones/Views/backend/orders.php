@@ -22,6 +22,7 @@ $orderStats = $data['orderStats'] ?? [];
             <div>
                 <span class="eyebrow">Thanh toán</span>
                 <h1>Quản lý đơn hàng</h1>
+                <p class="admin-page-note">Kiểm tra trạng thái đơn và cập nhật giao hàng bằng bảng danh sách rõ ràng, ít hiệu ứng gây rối mắt.</p>
             </div>
             <button class="btn btn-soft" type="button"><i class="fa-solid fa-receipt"></i> Tổng đơn: <?= number_format($orderStats['orderCount'] ?? 0) ?></button>
         </div>
