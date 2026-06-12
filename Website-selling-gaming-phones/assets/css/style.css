@@ -102,6 +102,8 @@ select {
     color: #fff;
     background: var(--primary);
     box-shadow: 0 10px 24px rgba(37, 99, 235, 0.24);
+    width: 175px;
+
 }
 
 .btn-primary:hover {
@@ -494,6 +496,7 @@ body.dark-mode .site-header {
     color: var(--accent);
 }
 
+
 .deal-chip,
 .product-badge {
     display: inline-flex;
@@ -730,8 +733,9 @@ body.dark-mode .site-header {
 }
 
 .product-bottom strong {
-    font-size: 1.05rem;
+    font-size: 1.10rem;
     white-space: nowrap;
+    margin-left: 10px;
 }
 
 .stock-state {
@@ -753,7 +757,7 @@ body.dark-mode .site-header {
 .product-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 135px;
     margin-top: 4px;
 }
 
@@ -770,8 +774,8 @@ body.dark-mode .site-header {
 }
 
 .product-quick-form button {
-    width: 42px;
-    height: 42px;
+    width: 55px;
+    height: 43px;
     border-radius: 10px;
 }
 

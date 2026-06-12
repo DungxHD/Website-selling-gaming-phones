@@ -1,4 +1,5 @@
 <?php
+
 $product = $data['product'];
 $relatedProducts = array_filter($data['relatedProducts'] ?? [], fn($item) => (int)$item['id'] !== (int)$product['id']);
 $hotlineLabel = '1900 9999';

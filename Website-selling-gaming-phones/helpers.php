@@ -94,7 +94,7 @@ function render_product_card(array $product, string $returnUrl = ''): void
                 <span><i class="fa-solid fa-bolt"></i><?= e($charger) ?></span>
             </div>
             <div class="product-bottom">
-                <strong><?= e(format_vnd($price)) ?></strong>
+                <strong ><?= e(format_vnd($price)) ?></strong>
                 <?php if ($isOutOfStock): ?>
                     <span class="stock-state stock-out">Hết hàng</span>
                 <?php else: ?>
@@ -102,7 +102,7 @@ function render_product_card(array $product, string $returnUrl = ''): void
                 <?php endif; ?>
             </div>
             <div class="product-actions">
-                <a class="btn btn-primary" href="<?= e($detailUrl) ?>">Xem</a>
+                <a class="btn btn-primary" href="<?= e($detailUrl) ?>">Mua ngay</a>
                 <form class="product-quick-form" method="post" action="index.php?page=cart&action=cart_add">
                     <input type="hidden" name="product_id" value="<?= $id ?>">
                     <input type="hidden" name="quantity" value="1">
