@@ -26,13 +26,15 @@ require_once __DIR__ . '/../Models/Product.php';
 // - orders(), orderUpdateStatus()
 // - users(), userToggleStatus()
 
-class AdminController {
+class AdminController
+{
     private $admin;
     public function __construct()
     {
         $admin = new Product;
     }
-    public function addProduct() {
+    public function addProduct()
+    {
         $name = trim($_POST['name']) ?? '';
         $brand = trim($_POST['brand']) ?? '';
         $price = trim($_POST['price']) ?? '';
