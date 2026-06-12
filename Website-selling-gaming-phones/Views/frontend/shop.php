@@ -42,7 +42,7 @@ $isFilterOpen = !empty(array_filter($filters, fn($value) => $value !== '' && $va
                     <input type="hidden" name="action" value="advanced_search">
 
                     <div class="field wide">
-                        <label>Tên sản phẩm hoặc chip</label>
+                        <label>Tên sản phẩm</label>
                         <div class="input-icon">
                             <i class="fa-solid fa-magnifying-glass"></i>
                             <input type="search" name="name" value="<?= e($filters['name'] ?? '') ?>" placeholder="VD: ROG Phone, Snapdragon 8 Gen 3">

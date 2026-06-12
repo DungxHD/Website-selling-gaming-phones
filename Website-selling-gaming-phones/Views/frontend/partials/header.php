@@ -21,7 +21,7 @@ $searchValue = $_GET['q'] ?? '';
             <input type="hidden" name="page" value="shop">
 
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="search" name="search" value="<?= e($searchValue ?? '') ?>" placeholder="Tìm theo tên sản phẩm...">
+            <input type="search" name="search" value="<?= e($_GET['search'] ?? '') ?>" placeholder="Tìm theo tên sản phẩm...">
             <button type="submit">Tìm</button>
         </form>
 
