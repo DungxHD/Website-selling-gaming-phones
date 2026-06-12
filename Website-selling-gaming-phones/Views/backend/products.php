@@ -1,6 +1,10 @@
 <?php
 $products = $data['products'] ?? [];
 $editingProduct = $data['editingProduct'] ?? null;
+
+// Tự động xác định URL action và text nút bấm
+$actionUrl = $editingProduct ? 'index.php?page=admin_product_update' : 'index.php?page=admin_add_products';
+$buttonText = $editingProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm mới';
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -34,7 +38,9 @@ $editingProduct = $data['editingProduct'] ?? null;
             <?php endif; ?>
             <section class="admin-card admin-form-card">
                 <h2><?= $editingProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm' ?></h2>
-                <form class="admin-product-form mt-4" method="post" action="index.php?page=admin_add_products">
+                
+                <!-- ✅ ĐÃ SỬA: Form action động -->
+                <form class="admin-product-form mt-4" method="post" action="<?= e($actionUrl) ?>">
                     <input type="hidden" name="id" value="<?= (int)($editingProduct['id'] ?? 0) ?>">
 
                     <div class="form-section mb-5">
@@ -199,7 +205,10 @@ $editingProduct = $data['editingProduct'] ?? null;
                     </div>
 
                     <hr class="mb-4">
-                    <button type="submit" class="btn btn-primary btn-lg w-100"><i class="fa-solid fa-floppy-disk"></i> Lưu sản phẩm</button>
+                    <!-- ✅ ĐÃ SỬA: Nút bấm hiển thị text động -->
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="fa-solid fa-floppy-disk"></i> <?= e($buttonText) ?>
+                    </button>
                 </form>
             </section>
 
@@ -241,7 +250,7 @@ $editingProduct = $data['editingProduct'] ?? null;
                                     <td>
                                         <div class="admin-actions admin-actions-inline">
                                             <a class="icon-action" href="index.php?page=admin_products&edit=<?= (int)$product['id'] ?>" title="Sửa"><i class="fa-solid fa-pen"></i></a>
-                                            <form method="post" action="index.php?page=admin_products&action=admin_product_delete" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
+                                            <form method="post" action="index.php?page=admin_product_delete" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
                                                 <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
                                                 <button type="submit" class="icon-action danger" title="Xóa"><i class="fa-solid fa-trash"></i></button>
                                             </form>

@@ -54,6 +54,12 @@ switch ($page) {
     case 'admin_products':
         $result = $AdminController->products();
         break;
+    case 'admin_product_delete':
+        $result = $AdminController->deleteProducts();
+        break;
+    case 'admin_product_update':
+        $result = $AdminController->updateProduct();
+        break;
     default:
         // Các trang còn lại hiện chỉ giữ giao diện để bạn làm tiếp.
         // Khi bạn học xong, bạn sẽ tạo controller/model cho từng chức năng.
