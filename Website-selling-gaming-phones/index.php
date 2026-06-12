@@ -13,6 +13,7 @@ session_start();
 // - Views: Views/frontend và Views/backend (chỉ hiển thị).
 
 require_once __DIR__ . '/Controllers/FrontendController.php';
+require_once __DIR__ . '/Controllers/AdminController.php';
 require_once __DIR__ . '/helpers.php';
 
 function render_view(string $view, array $data = []): void
@@ -29,15 +30,11 @@ function render_view(string $view, array $data = []): void
     exit;
 }
 
-function cart_items_count(): int
-{
-    return array_sum($_SESSION['cart'] ?? []);
-}
-
 $page = $_GET['page'] ?? 'home';
 
 $productModel = new Product();
 $frontendController = new FrontendController($productModel);
+$AdminController = new AdminController($productModel);
 
 $result = null;
 
@@ -51,6 +48,12 @@ switch ($page) {
     case 'detail':
         $result = $frontendController->detail((int)($_GET['id'] ?? 0));
         break;
+    case 'admin_add_products':
+        $result = $AdminController->addProduct();
+        break;
+    case 'admin_products':
+        $result = $AdminController->products();
+        break;
     default:
         // Các trang còn lại hiện chỉ giữ giao diện để bạn làm tiếp.
         // Khi bạn học xong, bạn sẽ tạo controller/model cho từng chức năng.
@@ -63,7 +66,6 @@ switch ($page) {
             'checkout' => 'frontend/checkout.php',
             'admin_login' => 'backend/login.php',
             'admin_dashboard' => 'backend/dashboard.php',
-            'admin_products' => 'backend/products.php',
             'admin_orders' => 'backend/orders.php',
             'admin_users' => 'backend/users.php',
         ];
