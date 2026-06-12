@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../Models/Product.php';
 // =========================================================
 // ADMIN CONTROLLER (CHỈ HƯỚNG DẪN)
 // =========================================================
@@ -25,3 +26,24 @@
 // - orders(), orderUpdateStatus()
 // - users(), userToggleStatus()
 
+class AdminController {
+    private $admin;
+    public function __construct()
+    {
+        $admin = new Product;
+    }
+    public function addProduct() {
+        $name = trim($_POST['name']) ?? '';
+        $brand = trim($_POST['brand']) ?? '';
+        $price = trim($_POST['price']) ?? '';
+        $quantity = trim($_POST['quantity']) ?? '';
+        $condition = $_POST['condition'];
+        $rating = trim($_POST['rating']) ?? '';
+        $cpu = trim($_POST['cpu']) ?? '';
+        $screen = trim($_POST['screen']) ?? '';
+        $battery = trim($_POST['battery']) ?? '';
+        $charger = trim($_POST['charger']) ?? '';
+        $image = trim($_POST['image']) ?? '';
+        $description = trim($_POST['description']) ?? '';
+    }
+}

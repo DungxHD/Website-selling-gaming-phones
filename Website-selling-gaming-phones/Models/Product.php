@@ -52,7 +52,7 @@ class Product
         foreach ($params as $key => $value) {
             $statement->bindValue($key, $value, PDO::PARAM_STR);
         }
-        $statement->bindValue(':limit', max(1, $limit), PDO::PARAM_INT);
+        $statement->bindValue(':limit', max(1, $limit), PDO::PARAM_INT); //bindValue dùng để gán giá trị trực tiếp vào tham số
         $statement->execute();
 
         return $statement->fetchAll();
