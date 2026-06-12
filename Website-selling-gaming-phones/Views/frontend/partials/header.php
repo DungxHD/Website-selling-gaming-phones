@@ -19,10 +19,12 @@ $searchValue = $_GET['q'] ?? '';
 
         <form class="header-search" action="index.php" method="get">
             <input type="hidden" name="page" value="shop">
+
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="search" name="q" value="<?= e($searchValue) ?>" placeholder="Tìm theo tên sản phẩm, hãng, chip...">
+            <input type="search" name="search" value="<?= e($searchValue ?? '') ?>" placeholder="Tìm theo tên sản phẩm...">
             <button type="submit">Tìm</button>
         </form>
+
 
         <nav class="main-nav" aria-label="Menu chính">
             <a class="<?= $currentPage === 'home' ? 'active' : '' ?>" href="index.php?page=home">Trang chủ</a>

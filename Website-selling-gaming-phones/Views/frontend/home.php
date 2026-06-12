@@ -36,7 +36,7 @@ $hero = $deals[0] ?? $products[0] ?? null;
                         <?php endif; ?>
                     </div>
                     <div class="trust-strip">
-                        <span><strong>35+</strong> mẫu gaming</span>
+                        <span><strong>99+</strong> mẫu gaming</span>
                         <span><strong>5</strong> hãng chủ lực</span>
                         <span><strong>12T</strong> bảo hành</span>
                     </div>
