@@ -25,11 +25,7 @@
 // - orders(), orderUpdateStatus()
 // - users(), userToggleStatus()
 
-class AdminController
-{
-    private $admin;
-    public function __construct()
-require_once __DIR__ . '/../Models/Product.php';}
+require_once __DIR__ . '/../Models/Product.php';
 
 class AdminController
 {
@@ -42,24 +38,10 @@ class AdminController
         // 3. BẮT BUỘC phải có $this-> để gán vào thuộc tính của class
         $this->productModel = $productModel;
     }
-    public function addProduct()
-    {
-        $name = trim($_POST['name']) ?? '';
-        $brand = trim($_POST['brand']) ?? '';
-        $price = trim($_POST['price']) ?? '';
-        $quantity = trim($_POST['quantity']) ?? '';
-        $condition = $_POST['condition'];
-        $rating = trim($_POST['rating']) ?? '';
-        $cpu = trim($_POST['cpu']) ?? '';
-        $screen = trim($_POST['screen']) ?? '';
-        $battery = trim($_POST['battery']) ?? '';
-        $charger = trim($_POST['charger']) ?? '';
-        $image = trim($_POST['image']) ?? '';
-        $description = trim($_POST['description']) ?? '';
 
-    public function viewProducts() {
+    // public function viewProducts() {
 
-    }
+    // }
     // 4. Đổi kiểu trả về thành array (để index.php render được view)
     public function addProduct(): array
     {
@@ -91,7 +73,7 @@ class AdminController
                 $rating,
                 $cpu,
                 $ram,
-                $rom,
+$rom,
                 $screen,
                 $battery,
                 $charger,
