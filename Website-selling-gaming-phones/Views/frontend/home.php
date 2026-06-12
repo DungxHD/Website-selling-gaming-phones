@@ -139,12 +139,6 @@ $hero = $deals[0] ?? $products[0] ?? null;
                         <?php render_product_card($product, 'index.php?page=home'); ?>
                     <?php endforeach; ?>
                 </div>
-
-                <div class="pagination">
-                    <?php for ($i = 1; $i <= $pagination['totalPages']; $i++): ?>
-                        <a class="<?= $i === $pagination['current'] ? 'active' : '' ?>" href="index.php?page=<?= e($pagination['basePage']) ?>&p=<?= $i ?>"><?= $i ?></a>
-                    <?php endfor; ?>
-                </div>
             </div>
         </section>
 
