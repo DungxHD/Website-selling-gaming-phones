@@ -194,4 +194,61 @@ function cart_items_count(): int
     }
     return $count;
 }
+
+
+/**
+ * Hàm xử lý upload ảnh sản phẩm
+ */
+function upload_product_image(string $inputName = 'image'): string|false
+{
+    // Kiểm tra có file được upload không
+    if (!isset($_FILES[$inputName]) || $_FILES[$inputName]['error'] === UPLOAD_ERR_NO_FILE) {
+        return false;
+    }
+    
+    // Kiểm tra lỗi upload
+    if ($_FILES[$inputName]['error'] !== UPLOAD_ERR_OK) {
+        return false;
+    }
+    
+    $file = $_FILES[$inputName];
+    
+    // Kiểm tra kích thước (tối đa 5MB)
+    if ($file['size'] > 5 * 1024 * 1024) {
+        $_SESSION['flash']['error'] = 'Ảnh quá lớn! Tối đa 5MB.';
+        return false;
+    }
+    
+    // Kiểm tra định dạng file
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+    
+    if (!in_array($mimeType, $allowedTypes)) {
+        $_SESSION['flash']['error'] = 'Định dạng ảnh không hợp lệ! Chỉ chấp nhận JPG, PNG, GIF, WEBP.';
+        return false;
+    }
+    
+    // Tạo tên file duy nhất
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $newFileName = 'product_' . time() . '_' . uniqid() . '.' . $extension;
+    
+    // Đường dẫn lưu file
+    $uploadDir = __DIR__ . '/uploads/products/';
+    
+    // Tạo thư mục nếu chưa có
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+    
+    $targetPath = $uploadDir . $newFileName;
+    
+    // Di chuyển file
+    if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+        return 'uploads/products/' . $newFileName;
+    }
+    
+    return false;
+}
 ?>
