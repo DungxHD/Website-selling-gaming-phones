@@ -29,7 +29,7 @@ class AdminController
 {
     private $admin;
     public function __construct()
-require_once __DIR__ . '/../Models/Product.php';
+require_once __DIR__ . '/../Models/Product.php';}
 
 class AdminController
 {
@@ -57,9 +57,9 @@ class AdminController
         $image = trim($_POST['image']) ?? '';
         $description = trim($_POST['description']) ?? '';
 
-    // public function viewProducts() {
+    public function viewProducts() {
 
-    // }
+    }
     // 4. Đổi kiểu trả về thành array (để index.php render được view)
     public function addProduct(): array
     {
