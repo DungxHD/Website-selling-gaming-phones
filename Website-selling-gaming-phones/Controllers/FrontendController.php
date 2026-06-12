@@ -7,6 +7,8 @@ class FrontendController
         private Product $productModel = new Product()
     ) {}
 
+
+    // Phần trang chủ
     public function home(): array
     {
         return [
@@ -24,6 +26,7 @@ class FrontendController
         ];
     }
 
+    // trang hiển thị sẳn phẩn ở cửa hàng
     public function shop(): array
     {
         // 1. Phân trang mặc định
@@ -100,7 +103,7 @@ class FrontendController
         ];
     }
 
-
+    //  xem chi tiết sản phẩm
     public function detail(int $id): array
     {
         $product = $this->productModel->getById($id);

@@ -39,8 +39,8 @@ $buttonText = $editingProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩ
             <section class="admin-card admin-form-card">
                 <h2><?= $editingProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm' ?></h2>
                 
-                <!-- ✅ ĐÃ SỬA: Form action động -->
-                <form class="admin-product-form mt-4" method="post" action="<?= e($actionUrl) ?>">
+                <!-- ✅ ĐÃ SỬA: Thêm enctype="multipart/form-data" để upload được file -->
+                <form class="admin-product-form mt-4" method="post" action="<?= e($actionUrl) ?>" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="<?= (int)($editingProduct['id'] ?? 0) ?>">
 
                     <div class="form-section mb-5">
@@ -103,10 +103,28 @@ $buttonText = $editingProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩ
                                 <input class="form-control" type="number" name="rating" min="1" max="5" value="<?= (int)($editingProduct['rating'] ?? 5) ?>" required>
                             </div>
 
+                            <!-- ✅ ĐÃ SỬA: Phần upload ảnh -->
                             <div class="col-12">
-                                <label class="form-label fw-bold">Ảnh URL <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="image" value="<?= e($editingProduct['image'] ?? '') ?>" required>
+                                <label class="form-label fw-bold">Ảnh sản phẩm <span class="text-danger">*</span></label>
+                                
+                                <!-- Hiển thị ảnh cũ nếu đang sửa -->
+                                <?php if (!empty($editingProduct['image'])): ?>
+                                    <div class="mb-3 p-3 bg-light rounded">
+                                        <p class="mb-2 text-muted small">Ảnh hiện tại:</p>
+                                        <img src="<?= e($editingProduct['image']) ?>" alt="Ảnh hiện tại" style="max-width: 200px; border-radius: 8px; border: 2px solid #ddd;">
+                                        <!-- Hidden input để lưu đường dẫn ảnh cũ -->
+                                        <input type="hidden" name="old_image" value="<?= e($editingProduct['image']) ?>">
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <!-- Input chọn file từ máy tính -->
+                                <input class="form-control mb-2" type="file" name="image" accept="image/*" <?= empty($editingProduct['image']) ? 'required' : '' ?>>
+                                <small class="text-muted d-block mb-2">
+                                    <i class="fa-solid fa-circle-info"></i> 
+                                    Chọn file ảnh từ máy tính (JPG, PNG, GIF, WEBP). Tối đa 5MB.
+                                </small>
                             </div>
+
                             <div class="col-12">
                                 <label class="form-label fw-bold">Mô tả ngắn <span class="text-danger">*</span></label>
                                 <textarea class="form-control admin-textarea" name="description" rows="3" required><?= e($editingProduct['description'] ?? '') ?></textarea>
