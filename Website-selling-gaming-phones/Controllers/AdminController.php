@@ -31,21 +31,16 @@ require_once __DIR__ . '/../Models/Product.php';
 class AdminController
 {
     private $productModel;
-
-    // Constructor nhận Model cực gọn
     public function __construct($productModel)
     {
         $this->productModel = $productModel;
     }
 
-    // Hàm xử lý Thêm sản phẩm (Đã dọn dẹp rác code)
     public function addProduct(): array
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // ✨ Cải tiến 1: Trim toàn bộ dữ liệu $_POST chỉ bằng 1 dòng duy nhất với Arrow Function
             $inputs = array_map(fn($value) => trim($value ?? ''), $_POST);
 
-            // Gọi Model và truyền tham số trực tiếp từ mảng $inputs (Bảo mật & Tránh Warning PHP 8)
             $this->productModel->addProduct(
                 $inputs['name'] ?? '',
                 $inputs['brand'] ?? '',
