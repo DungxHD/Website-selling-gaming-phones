@@ -8,14 +8,22 @@ $admin = $data['currentAdmin'] ?? null;
         Bảng quản trị
     </a>
     <div class="admin-profile">
-        <strong><?= ($admin['name'] ?? 'Quản trị viên') ?></strong>
-        <span><?= $admin ? ($admin['username']) : 'Chế độ xem giao diện' ?></span>
+        <strong><?= $admin ? e($admin['name']) : 'Khách' ?></strong>
+        <span><?= $admin ? e($admin['username']) : 'Chưa đăng nhập' ?></span>
     </div>
     <nav>
-        <a class="<?= $adminPage === 'admin_dashboard' ? 'active' : '' ?>" href="index.php?page=admin_dashboard"><i class="fa-solid fa-chart-pie"></i> Tổng quan</a>
-        <a class="<?= $adminPage === 'admin_products' ? 'active' : '' ?>" href="index.php?page=admin_products"><i class="fa-solid fa-box"></i> Sản phẩm</a>
-        <a class="<?= $adminPage === 'admin_orders' ? 'active' : '' ?>" href="index.php?page=admin_orders"><i class="fa-solid fa-clipboard-list"></i> Đơn hàng</a>
-        <a class="<?= $adminPage === 'admin_users' ? 'active' : '' ?>" href="index.php?page=admin_users"><i class="fa-solid fa-users"></i> Người dùng</a>
+        <a class="<?= $adminPage === 'admin_dashboard' ? 'active' : '' ?>" href="index.php?page=admin_dashboard">
+            <i class="fa-solid fa-chart-pie"></i> Tổng quan
+        </a>
+        <a class="<?= $adminPage === 'admin_products' ? 'active' : '' ?>" href="index.php?page=admin_products">
+            <i class="fa-solid fa-box"></i> Sản phẩm
+        </a>
+        <a class="<?= $adminPage === 'admin_orders' ? 'active' : '' ?>" href="index.php?page=admin_orders">
+            <i class="fa-solid fa-clipboard-list"></i> Đơn hàng
+        </a>
+        <a class="<?= $adminPage === 'admin_users' ? 'active' : '' ?>" href="index.php?page=admin_users">
+            <i class="fa-solid fa-users"></i> Người dùng
+        </a>
     </nav>
     <div class="admin-sidebar-footer">
         <a href="index.php?page=home"><i class="fa-solid fa-house"></i> Về website</a>

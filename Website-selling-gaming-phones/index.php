@@ -1,116 +1,162 @@
 <?php
-session_start();
+declare(strict_types=1);
 
-// =========================================================
-// FRONT CONTROLLER (Router tối giản)
-// =========================================================
-// Mục tiêu file này:
-// - Nhận mọi request qua index.php?page=...
-// - Gọi Controller để lấy dữ liệu
-// - Render View
-
-// Bạn đang học MVC nên mình giữ mọi thứ thật gọn:
-// - Views: Views/frontend và Views/backend (chỉ hiển thị).
-
-require_once __DIR__ . '/Controllers/FrontendController.php';
-require_once __DIR__ . '/Controllers/AdminController.php';
+// =========================================================================
+// 1. KHỞI TẠO HỆ THỐNG & SESSION
+// =========================================================================
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/helpers.php';
 
+// Autoload
+spl_autoload_register(function (string $className) {
+    $directories = ['Models', 'Controllers'];
+    foreach ($directories as $dir) {
+        $file = __DIR__ . "/{$dir}/{$className}.php";
+        if (file_exists($file)) {
+            require_once $file;
+            return;
+        }
+    }
+});
+
+// =========================================================================
+// 2. HÀM RENDER VIEW
+// =========================================================================
 function render_view(string $view, array $data = []): void
 {
     $path = __DIR__ . '/Views/' . $view;
-
     if (!file_exists($path)) {
         http_response_code(404);
         echo '<h3>Không tìm thấy file giao diện: ' . htmlspecialchars($view, ENT_QUOTES, 'UTF-8') . '</h3>';
         exit;
     }
-
     include $path;
     exit;
 }
 
+// =========================================================================
+// 3. KHAI BÁO ROUTING
+// =========================================================================
 $page = $_GET['page'] ?? 'home';
-
 $productModel = new Product();
-$frontendController = new FrontendController($productModel);
-$AdminController = new AdminController($productModel);
-
 $result = null;
 
-switch ($page) {
-    case 'home':
-        $result = $frontendController->home();
-        break;
-    case 'shop':
-        $result = $frontendController->shop();
-        break;
-    case 'detail':
-        $result = $frontendController->detail((int)($_GET['id'] ?? 0));
-        break;
-    case 'admin_add_products':
-        $result = $AdminController->addProduct();
-        break;
-    case 'admin_products':
-        $result = $AdminController->products();
-        break;
-    case 'admin_product_delete':
-        $result = $AdminController->deleteProducts();
-        break;
-    case 'admin_product_update':
-        $result = $AdminController->updateProduct();
-        break;
-    default:
-        // Các trang còn lại hiện chỉ giữ giao diện để bạn làm tiếp.
-        // Khi bạn học xong, bạn sẽ tạo controller/model cho từng chức năng.
-        $simpleViews = [
-            'login' => 'frontend/login.php',
-            'register' => 'frontend/register.php',
-            'forgot' => 'frontend/forgot.php',
-            'change_password' => 'frontend/change_password.php',
-            'cart' => 'frontend/cart.php',
-            'checkout' => 'frontend/checkout.php',
-            'admin_login' => 'backend/login.php',
-            'admin_dashboard' => 'backend/dashboard.php',
-            'admin_orders' => 'backend/orders.php',
-            'admin_users' => 'backend/users.php',
-        ];
+$routes = [
+    // --- Frontend ---
+    'home'                 => ['FrontendController', 'home'],
+    'shop'                 => ['FrontendController', 'shop'],
+    'detail'               => ['FrontendController', 'detail'],
+    // --- Giỏ hàng ---
+    'cart'                 => ['CartController', 'cart'],
 
-        if (isset($simpleViews[$page])) {
-            $result = ['view' => $simpleViews[$page], 'data' => []];
-            break;
-        }
+    
+    // --- Auth (Admin Login/Logout) ---
+    'admin_login'          => ['AuthController', 'adminLogin'],
+    'admin_logout'         => ['AuthController', 'adminLogout'],
+    // --- Admin Users ---
+    'admin_users'          => ['AuthController', 'adminUsers'],
+    'admin_user_add'       => ['AuthController', 'adminUserAdd'],
+    'admin_user_update'    => ['AuthController', 'adminUserUpdate'],
+    // --- Admin Products ---
+    'admin_dashboard'      => ['AdminController', 'dashboard'],
+    'admin_add_products'   => ['AdminController', 'addProduct'],
+    'admin_products'       => ['AdminController', 'products'],
+    'admin_product_delete' => ['AdminController', 'deleteProducts'],
+    'admin_product_update' => ['AdminController', 'updateProduct'],
+];
 
-        http_response_code(404);
-        echo '<h3>Trang bạn tìm không tồn tại (404).</h3>';
-        exit;
+$simpleViews = [
+    'login'           => 'frontend/login.php',
+    'register'        => 'frontend/register.php',
+    'forgot'          => 'frontend/forgot.php',
+    'change_password' => 'frontend/change_password.php',
+    'checkout'        => 'frontend/checkout.php',
+    'admin_orders'    => 'backend/orders.php',
+];
+
+// =========================================================================
+// 4.MIDDLEWARE BẢO VỆ TRANG ADMIN Không cho vào nếu chưa đăng nhập tài khoản dành cho admin
+// =========================================================================
+// Danh sách các page yêu cầu PHẢI đăng nhập admin
+$adminProtectedPages = [
+    'admin_dashboard',
+    'admin_products',
+    'admin_add_products',
+    'admin_product_delete',
+    'admin_product_update',
+    'admin_users',
+    'admin_user_add',
+    'admin_user_update',
+    'admin_orders',
+    'admin_logout',
+];
+
+// Nếu đang truy cập trang admin mà chưa đăng nhập -> chuyển về login
+if (in_array($page, $adminProtectedPages) && empty($_SESSION['admin'])) {
+    $_SESSION['flash']['error'] = 'Vui lòng đăng nhập để truy cập trang quản trị!';
+    header("Location: index.php?page=admin_login");
+    exit();
 }
 
-if (!is_array($result) || empty($result['view'])) {
-    http_response_code(500);
-    echo '<h3>Không thể hiển thị trang hiện tại.</h3>';
+// =========================================================================
+// 5. XỬ LÝ ROUTING
+// =========================================================================
+if (isset($routes[$page])) {
+    [$controllerClass, $methodName] = $routes[$page];
+    if (class_exists($controllerClass)) {
+        $controllerInstance = new $controllerClass($productModel);
+        if (method_exists($controllerInstance, $methodName)) {
+            $result = ($page === 'detail')
+                ? $controllerInstance->$methodName((int)($_GET['id'] ?? 0))
+                : $controllerInstance->$methodName();
+        } else {
+            http_response_code(500);
+            die("<h3>Lỗi: Phương thức '{$methodName}' không tồn tại trong '{$controllerClass}'.</h3>");
+        }
+    } else {
+        http_response_code(500);
+        die("<h3>Lỗi: Lớp '{$controllerClass}' không tồn tại.</h3>");
+    }
+} elseif (isset($simpleViews[$page])) {
+    $result = ['view' => $simpleViews[$page], 'data' => []];
+} else {
+    http_response_code(404);
+    echo '<h3>Trang bạn tìm không tồn tại (404).</h3>';
     exit;
 }
 
-$flash = null;
+// =========================================================================
+// 6. CHUẨN BỊ DỮ LIỆU CHO VIEW
+// =========================================================================
+if (!is_array($result) || empty($result['view'])) {
+    http_response_code(500);
+    echo '<h3>Lỗi cấu trúc dữ liệu từ Controller.</h3>';
+    exit;
+}
+
+$result['data'] ??= [];
+
+// Flash message
 if (!empty($_SESSION['flash']) && is_array($_SESSION['flash'])) {
     $type = array_key_first($_SESSION['flash']);
     if ($type !== null) {
-        $flash = [
-            'type' => (string)$type,
+        $result['data']['flash'] = [
+            'type'    => (string)$type,
             'message' => (string)($_SESSION['flash'][$type] ?? ''),
         ];
     }
     unset($_SESSION['flash']);
 }
 
-// Data dùng chung để header/admin sidebar hoạt động đúng (đơn giản)
-$shared = [
-    'page' => $page,
-    'cartCount' => cart_items_count(),
-    'currentUser' => $_SESSION['user'] ?? null,
-    'currentAdmin' => $_SESSION['admin'] ?? null, 
-    'flash' => $flash,
-];
+// Truyền thông tin admin đang đăng nhập vào view (cho sidebar)
+$result['data']['currentAdmin'] = $_SESSION['admin'] ?? null;
+$result['data']['page'] = $page;
+$result['data']['currentUser'] = $_SESSION['user'] ?? null;
+$result['data']['cartCount'] = function_exists('cart_items_count') ? cart_items_count() : 0;
 
-render_view($result['view'], array_merge($shared, $result['data'] ?? []));
+// =========================================================================
+// 7. RENDER VIEW
+// =========================================================================
+render_view($result['view'], $result['data']);
