@@ -2,25 +2,16 @@
 
 declare(strict_types=1);
 
-// KHỞI TẠO HỆ THỐNG & SESSION
+// =========================================================================
+// 1. KHỞI TẠO HỆ THỐNG & CORE COMPONENTS
+// =========================================================================
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 require_once __DIR__ . '/helpers.php';
 
-// Cơ chế Autoload: Tự động phát hiện và nạp file khi Class được gọi đến (Không cần require thủ công)
-declare(strict_types=1);
-
-// =========================================================================
-// 1. KHỞI TẠO HỆ THỐNG & SESSION
-// =========================================================================
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-require_once __DIR__ . '/helpers.php';
-
-// Autoload
+// Cơ chế Autoload: Khởi tạo lười biếng (Lazy loading) các Class Model/Controller
 spl_autoload_register(function (string $className) {
     $directories = ['Models', 'Controllers'];
     foreach ($directories as $dir) {
@@ -33,7 +24,7 @@ spl_autoload_register(function (string $className) {
 });
 
 // =========================================================================
-// 2. HÀM RENDER VIEW
+// 2. HÀM KẾT XUẤT GIAO DIỆN (VIEW RENDERER)
 // =========================================================================
 function render_view(string $view, array $data = []): void
 {
@@ -48,41 +39,32 @@ function render_view(string $view, array $data = []): void
 }
 
 // =========================================================================
-// KHAI BÁO BẢN ĐỒ ĐƯỜNG DẪN (ROUTING MAPS)
-// 3. KHAI BÁO ROUTING
+// 3. BẢN ĐỒ ĐỊNH TUYẾN (ROUTING MAPS)
 // =========================================================================
 $page = $_GET['page'] ?? 'home';
 $productModel = new Product();
 $result = null;
 
-// Cấu trúc phẳng: 'tên_trang_trên_url' => ['Tên_Lớp_Controller', 'Tên_Phương_Thức']
-$routes = [
-    // --- Nhóm Frontend công khai ---
-    'home'                 => ['FrontendController', 'home'],
-    'shop'                 => ['FrontendController', 'shop'],
-    'detail'               => ['FrontendController', 'detail'],
-
-    // --- Nhóm Giỏ hàng ---
-    'cart'                 => ['CartController', 'cart'],
-
-    // --- Nhóm Quản trị Admin ---
+// Cấu trúc: 'tên_trang_trên_url' => ['Tên_Controller', 'Tên_Phương_thức']
 $routes = [
     // --- Frontend ---
     'home'                 => ['FrontendController', 'home'],
     'shop'                 => ['FrontendController', 'shop'],
     'detail'               => ['FrontendController', 'detail'],
+
     // --- Giỏ hàng ---
     'cart'                 => ['CartController', 'cart'],
 
-    
-    // --- Auth (Admin Login/Logout) ---
+    // --- Xác thực (Auth Admin) ---
     'admin_login'          => ['AuthController', 'adminLogin'],
     'admin_logout'         => ['AuthController', 'adminLogout'],
-    // --- Admin Users ---
+
+    // --- Quản trị: Người dùng ---
     'admin_users'          => ['AuthController', 'adminUsers'],
     'admin_user_add'       => ['AuthController', 'adminUserAdd'],
     'admin_user_update'    => ['AuthController', 'adminUserUpdate'],
-    // --- Admin Products ---
+
+    // --- Quản trị: Sản phẩm & Dashboard ---
     'admin_dashboard'      => ['AdminController', 'dashboard'],
     'admin_add_products'   => ['AdminController', 'addProduct'],
     'admin_products'       => ['AdminController', 'products'],
@@ -90,39 +72,19 @@ $routes = [
     'admin_product_update' => ['AdminController', 'updateProduct'],
 ];
 
-/**
- * Mảng chứa các trang giao diện tĩnh (Chưa viết hoặc chưa cần xử lý logic Controller)
- */
+// Các trang giao diện tĩnh (Chưa có Controller xử lý)
 $simpleViews = [
     'login'           => 'frontend/login.php',
     'register'        => 'frontend/register.php',
     'forgot'          => 'frontend/forgot.php',
     'change_password' => 'frontend/change_password.php',
     'checkout'        => 'frontend/checkout.php',
-    'admin_login'     => 'backend/login.php',
-    'admin_dashboard' => 'backend/dashboard.php',
-    'admin_orders'    => 'backend/orders.php',
-    'admin_users'     => 'backend/users.php',
-];
-
-if (isset($routes[$page])) {
-    [$controllerClass, $methodName] = $routes[$page];
-
-    // Kiểm tra tính hợp lệ xem file Class có tồn tại nhờ Autoload không
-    if (class_exists($controllerClass)) {
-        $controllerInstance = new $controllerClass($productModel);
-
-        // Kiểm tra phương thức có tồn tại trong Controller không trước khi chạy
-        if (method_exists($controllerInstance, $methodName)) {
-
-            // Thực thi hàm động. Riêng trang detail cần bóc tách ID từ URL, các trang khác chạy rỗng
     'admin_orders'    => 'backend/orders.php',
 ];
 
 // =========================================================================
-// 4.MIDDLEWARE BẢO VỆ TRANG ADMIN Không cho vào nếu chưa đăng nhập tài khoản dành cho admin
+// 4. TẦNG BẢO VỆ (MIDDLEWARE - ADMIN GUARD)
 // =========================================================================
-// Danh sách các page yêu cầu PHẢI đăng nhập admin
 $adminProtectedPages = [
     'admin_dashboard',
     'admin_products',
@@ -136,21 +98,24 @@ $adminProtectedPages = [
     'admin_logout',
 ];
 
-// Nếu đang truy cập trang admin mà chưa đăng nhập -> chuyển về login
-if (in_array($page, $adminProtectedPages) && empty($_SESSION['admin'])) {
+// Đẩy về trang đăng nhập nếu truy cập Admin mà không có session quyền Admin
+if (in_array($page, $adminProtectedPages, true) && empty($_SESSION['admin'])) {
     $_SESSION['flash']['error'] = 'Vui lòng đăng nhập để truy cập trang quản trị!';
     header("Location: index.php?page=admin_login");
-    exit();
+    exit;
 }
 
 // =========================================================================
-// 5. XỬ LÝ ROUTING
+// 5. BỘ XỬ LÝ ĐỊNH TUYẾN CHÍNH (DYNAMIC ROUTER ENGINE)
 // =========================================================================
 if (isset($routes[$page])) {
     [$controllerClass, $methodName] = $routes[$page];
+
     if (class_exists($controllerClass)) {
         $controllerInstance = new $controllerClass($productModel);
+
         if (method_exists($controllerInstance, $methodName)) {
+            // Truyền ID tự động nếu là trang chi tiết, ngược lại gọi hàm rỗng
             $result = ($page === 'detail')
                 ? $controllerInstance->$methodName((int)($_GET['id'] ?? 0))
                 : $controllerInstance->$methodName();
@@ -163,17 +128,6 @@ if (isset($routes[$page])) {
         die("<h3>Lỗi hệ thống: Lớp '{$controllerClass}' không tồn tại trên hệ thống.</h3>");
     }
 } elseif (isset($simpleViews[$page])) {
-    // Nếu thuộc danh sách các trang view tĩnh, gán trực tiếp mảng rỗng dữ liệu
-    $result = ['view' => $simpleViews[$page], 'data' => []];
-} else {
-    // Phản hồi lỗi không tìm thấy trang
-            die("<h3>Lỗi: Phương thức '{$methodName}' không tồn tại trong '{$controllerClass}'.</h3>");
-        }
-    } else {
-        http_response_code(500);
-        die("<h3>Lỗi: Lớp '{$controllerClass}' không tồn tại.</h3>");
-    }
-} elseif (isset($simpleViews[$page])) {
     $result = ['view' => $simpleViews[$page], 'data' => []];
 } else {
     http_response_code(404);
@@ -181,29 +135,19 @@ if (isset($routes[$page])) {
     exit;
 }
 
-// Kiểm tra tính chuẩn mực của dữ liệu trả về từ các hàm nghiệp vụ
+// Kiểm tra tính chuẩn mực của dữ liệu trả về từ các Controller
 if (!is_array($result) || empty($result['view'])) {
     http_response_code(500);
-    echo '<h3>Lỗi cấu trúc: Dữ liệu trả về từ Controller không đúng định dạng mảng MVC mẫu.</h3>';
+    echo '<h3>Lỗi cấu trúc: Dữ liệu trả về từ Controller không đúng định dạng.</h3>';
     exit;
 }
 
-// Đảm bảo khóa 'data' luôn tồn tại dưới dạng mảng để tránh lỗi không mong muốn
+// =========================================================================
+// 6. CHUẨN BỊ DỮ LIỆU TOÀN CỤC CHO VIEW (GLOBAL DATA)
+// =========================================================================
 $result['data'] ??= [];
 
-// Trích xuất thông báo nhanh (Flash Message) nếu có từ Session sang View, sau đó xóa ngay để giải phóng
-// =========================================================================
-// 6. CHUẨN BỊ DỮ LIỆU CHO VIEW
-// =========================================================================
-if (!is_array($result) || empty($result['view'])) {
-    http_response_code(500);
-    echo '<h3>Lỗi cấu trúc dữ liệu từ Controller.</h3>';
-    exit;
-}
-
-$result['data'] ??= [];
-
-// Flash message
+// 6.1. Xử lý Flash Message (Chỉ hiển thị 1 lần)
 if (!empty($_SESSION['flash']) && is_array($_SESSION['flash'])) {
     $type = array_key_first($_SESSION['flash']);
     if ($type !== null) {
@@ -212,23 +156,16 @@ if (!empty($_SESSION['flash']) && is_array($_SESSION['flash'])) {
             'message' => (string)($_SESSION['flash'][$type] ?? ''),
         ];
     }
-    unset($_SESSION['flash']);
+    unset($_SESSION['flash']); // Hủy ngay để giải phóng RAM
 }
 
-// Đóng gói mảng biến dùng chung truyền trực tiếp vào Header của toàn bộ các trang giao diện
-$result['data']['page']        = $page;
-$result['data']['currentUser'] = $_SESSION['user'] ?? null;
-$result['data']['cartCount']   = function_exists('cart_items_count') ? cart_items_count() : 0;
-
-// KÍCH HOẠT HÀM HIỂN THỊ GIAO DIỆN CHÍNH THỨC
-render_view($result['view'], $result['data']);
-// Truyền thông tin admin đang đăng nhập vào view (cho sidebar)
+// 6.2. Đóng gói các biến dùng chung cho toàn bộ Header / Sidebar
+$result['data']['page']         = $page;
+$result['data']['currentUser']  = $_SESSION['user'] ?? null;
 $result['data']['currentAdmin'] = $_SESSION['admin'] ?? null;
-$result['data']['page'] = $page;
-$result['data']['currentUser'] = $_SESSION['user'] ?? null;
-$result['data']['cartCount'] = function_exists('cart_items_count') ? cart_items_count() : 0;
+$result['data']['cartCount']    = function_exists('cart_items_count') ? cart_items_count() : 0;
 
 // =========================================================================
-// 7. RENDER VIEW
+// 7. KÍCH HOẠT HÀM HIỂN THỊ GIAO DIỆN CHÍNH THỨC (FINAL RENDER)
 // =========================================================================
 render_view($result['view'], $result['data']);
