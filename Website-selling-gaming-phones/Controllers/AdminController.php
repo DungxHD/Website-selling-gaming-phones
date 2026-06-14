@@ -1,6 +1,7 @@
 <?php
 // Đảm bảo đã require file AdminModel
 require_once __DIR__ . '/../Models/AdminModel.php'; 
+require_once __DIR__ . '/../Models/AdminModel.php';
 
 class AdminController
 {
@@ -10,24 +11,35 @@ class AdminController
     public function __construct($productModel)
     {
         $this->productModel = $productModel;
-        $this->adminModel = new AdminProduct(); // Khởi tạo Admin Model
+        $this->adminModel = new AdminProduct();
+    }
+
+    // =========================================================
+    // HÀM DASHBOARD - THỐNG KÊ TỔNG QUAN
+    // =========================================================
+    public function dashboard(): array
+    {
+        return [
+            'view' => 'backend/dashboard.php',
+            'data' => [
+                'stats'        => $this->adminModel->getDashboardStats(),
+                'topProducts'  => $this->adminModel->getTopSellingProducts(10),
+                'latestOrders' => $this->adminModel->getLatestOrders(5),
+            ]
+        ];
     }
 
     // 1. THÊM SẢN PHẨM
     public function addProduct(): array
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $inputs = array_map(fn($value) => trim($value ?? ''), $_POST); // array_map duyệt toàn bộ post để thêm trim loại bỏ khoảng trắng vào từng phần tử
-
-            // XỬ LÝ UPLOAD ẢNH (Bắt buộc phải có file)
+            $inputs = array_map(fn($value) => trim($value ?? ''), $_POST);
             $uploadedImage = upload_product_image('image');
-
             if ($uploadedImage === false) {
                 $_SESSION['flash']['error'] = 'Vui lòng chọn ảnh sản phẩm!';
                 header("Location: index.php?page=admin_products");
                 exit();
             }
-
             $this->adminModel->addProduct(
                 $inputs['name'] ?? '',
                 $inputs['brand'] ?? '',
@@ -41,22 +53,18 @@ class AdminController
                 $inputs['screen'] ?? '',
                 $inputs['battery'] ?? '',
                 $inputs['charger'] ?? '',
-                $uploadedImage, // Đường dẫn ảnh đã upload
+                $uploadedImage,
                 $inputs['description'] ?? ''
             );
-
             $_SESSION['flash']['success'] = 'Thêm sản phẩm mới thành công! 🎉';
             header("Location: index.php?page=admin_products");
             exit();
         }
-
         return [
             'view' => 'backend/products.php',
             'data' => []
         ];
     }
-
-
 
     // 2. HIỂN THỊ DANH SÁCH SẢN PHẨM
     public function products(): array
@@ -64,30 +72,26 @@ class AdminController
         return [
             'view' => 'backend/products.php',
             'data' => [
-                'products'       => $this->productModel->getAll(100), // Đọc dữ liệu vẫn dùng productModel
+                'products'       => $this->productModel->getAll(100),
                 'editingProduct' => isset($_GET['edit']) ? $this->productModel->getById((int)$_GET['edit']) : null
             ]
         ];
     }
-
 
     // 3. XÓA SẢN PHẨM
     public function deleteProducts(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = (int)($_POST['product_id'] ?? 0);
-
             if ($id > 0) {
-                $this->adminModel->deleteProducts($id); // Gọi sang adminModel
+                $this->adminModel->deleteProducts($id);
                 $_SESSION['flash']['success'] = 'Xóa sản phẩm thành công!';
             } else {
                 $_SESSION['flash']['error'] = 'ID sản phẩm không hợp lệ!';
             }
-
             header("Location: index.php?page=admin_products");
             exit();
         }
-
         header("Location: index.php?page=admin_products");
         exit();
     }
@@ -97,25 +101,16 @@ class AdminController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = (int)($_POST['id'] ?? 0);
-
             if ($id > 0) {
                 $inputs = array_map(fn($value) => trim($value ?? ''), $_POST);
-
-                // XỬ LÝ ẢNH KHI SỬA
-                $imagePath = $inputs['old_image'] ?? ''; // Mặc định giữ ảnh cũ
-
-                // Nếu có upload ảnh mới
+                $imagePath = $inputs['old_image'] ?? '';
                 $uploadedImage = upload_product_image('image');
                 if ($uploadedImage !== false) {
                     $imagePath = $uploadedImage;
-
-                    // Xóa ảnh cũ nếu có
                     if (!empty($inputs['old_image']) && file_exists(__DIR__ . '/../' . $inputs['old_image'])) {
                         @unlink(__DIR__ . '/../' . $inputs['old_image']);
                     }
                 }
-                // Nếu không upload ảnh mới → Giữ nguyên ảnh cũ (đã gán ở trên)
-
                 $isUpdated = $this->adminModel->updateProduct(
                     $id,
                     $inputs['name'] ?? '',
@@ -130,10 +125,9 @@ class AdminController
                     $inputs['screen'] ?? '',
                     $inputs['battery'] ?? '',
                     $inputs['charger'] ?? '',
-                    $imagePath, // Đường dẫn ảnh (mới hoặc cũ)
+                    $imagePath,
                     $inputs['description'] ?? ''
                 );
-
                 if ($isUpdated) {
                     $_SESSION['flash']['success'] = 'Cập nhật sản phẩm thành công! 🎉';
                 } else {
@@ -142,11 +136,9 @@ class AdminController
             } else {
                 $_SESSION['flash']['error'] = 'ID sản phẩm không hợp lệ!';
             }
-
             header("Location: index.php?page=admin_products");
             exit();
         }
-
         header("Location: index.php?page=admin_products");
         exit();
     }
