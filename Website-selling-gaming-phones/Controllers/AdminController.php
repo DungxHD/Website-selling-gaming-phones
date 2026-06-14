@@ -66,17 +66,32 @@ class AdminController
         ];
     }
 
-    // 2. HIỂN THỊ DANH SÁCH SẢN PHẨM
-    public function products(): array
-    {
-        return [
-            'view' => 'backend/products.php',
-            'data' => [
-                'products'       => $this->productModel->getAll(100),
-                'editingProduct' => isset($_GET['edit']) ? $this->productModel->getById((int)$_GET['edit']) : null
-            ]
-        ];
+// 2. HIỂN THỊ DANH SÁCH SẢN PHẨM (CÓ TÌM KIẾM)
+public function products(): array
+{
+    // Lấy từ khóa tìm kiếm từ URL
+    $searchKeyword = trim($_GET['search'] ?? '');
+    
+    // Nếu có từ khóa tìm kiếm → gọi hàm searchProducts
+    if ($searchKeyword !== '') {
+        $products = $this->adminModel->searchProducts($searchKeyword);
+        $_SESSION['flash']['success'] = 'Sản phẩm đã tìm thấy hãy kéo xuống để xem !!';
+    } else {
+        // Không có tìm kiếm → lấy tất cả
+        $products = $this->productModel->getAll(100);
+        $_SESSION['flash']['success'] = 'Xóa tìm sản phẩm thành công !!';
     }
+    
+    return [
+        'view' => 'backend/products.php',
+        'data' => [
+            'products'       => $products,
+            'editingProduct' => isset($_GET['edit']) ? $this->productModel->getById((int)$_GET['edit']) : null,
+            'searchKeyword'  => $searchKeyword  // Truyền từ khóa xuống view
+        ]
+    ];
+}
+
 
     // 3. XÓA SẢN PHẨM
     public function deleteProducts(): void

@@ -12,17 +12,40 @@ class AdminProduct
 
     // 1. Hàm thêm sản phẩm
     public function addProduct(
-        string $name, string $brand, int $price, int $quantity, string $condition,
-        int $rating, string $cpu, string $ram, string $rom, string $screen,
-        string $battery, string $charger, $image, string $description
+        string $name,
+        string $brand,
+        int $price,
+        int $quantity,
+        string $condition,
+        int $rating,
+        string $cpu,
+        string $ram,
+        string $rom,
+        string $screen,
+        string $battery,
+        string $charger,
+        $image,
+        string $description
     ): void {
         $sql = "INSERT INTO products
             (name, brand, price, quantity, `condition`, rating, cpu, ram, rom, screen, battery, charger, image, description)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
-            $name, $brand, $price, $quantity, $condition, $rating,
-            $cpu, $ram, $rom, $screen, $battery, $charger, $image, $description
+            $name,
+            $brand,
+            $price,
+            $quantity,
+            $condition,
+            $rating,
+            $cpu,
+            $ram,
+            $rom,
+            $screen,
+            $battery,
+            $charger,
+            $image,
+            $description
         ]);
     }
 
@@ -32,20 +55,32 @@ class AdminProduct
         $stmt = $this->pdo->prepare("SELECT image FROM products WHERE id = ?");
         $stmt->execute([$id]);
         $product = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($product && !empty($product['image']) && file_exists(__DIR__ . '/../' . $product['image'])) {
             @unlink(__DIR__ . '/../' . $product['image']);
         }
-        
+
         $stmt = $this->pdo->prepare("DELETE FROM products WHERE id = ?");
         return $stmt->execute([$id]);
     }
 
     // 3. Hàm cập nhật sản phẩm
     public function updateProduct(
-        int $id, string $name, string $brand, int $price, int $quantity,
-        string $condition, int $rating, string $cpu, string $ram, string $rom,
-        string $screen, string $battery, string $charger, $image, string $description
+        int $id,
+        string $name,
+        string $brand,
+        int $price,
+        int $quantity,
+        string $condition,
+        int $rating,
+        string $cpu,
+        string $ram,
+        string $rom,
+        string $screen,
+        string $battery,
+        string $charger,
+        $image,
+        string $description
     ): bool {
         $sql = "UPDATE products SET
             name = ?, brand = ?, price = ?, quantity = ?, `condition` = ?,
@@ -54,8 +89,21 @@ class AdminProduct
             WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            $name, $brand, $price, $quantity, $condition, $rating,
-            $cpu, $ram, $rom, $screen, $battery, $charger, $image, $description, $id
+            $name,
+            $brand,
+            $price,
+            $quantity,
+            $condition,
+            $rating,
+            $cpu,
+            $ram,
+            $rom,
+            $screen,
+            $battery,
+            $charger,
+            $image,
+            $description,
+            $id
         ]);
     }
 
@@ -63,43 +111,32 @@ class AdminProduct
     // NHÓM HÀM THỐNG KÊ CHO DASHBOARD
     // =========================================================
 
-    /**
-     * Lấy tất cả thống kê tổng quan cho dashboard
-     */
     public function getDashboardStats(): array
     {
-        // Đếm số sản phẩm
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM products");
         $productCount = (int)$stmt->fetchColumn();
 
-        // Tổng tồn kho
         $stmt = $this->pdo->query("SELECT COALESCE(SUM(quantity), 0) FROM products");
         $totalStock = (int)$stmt->fetchColumn();
 
-        // Đếm số người dùng
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM users");
         $userCount = (int)$stmt->fetchColumn();
 
-        // Đếm tài khoản bị khóa
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE is_active = 0");
         $stmt->execute();
         $inactiveUserCount = (int)$stmt->fetchColumn();
 
-        // Đếm tổng đơn hàng
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM orders");
         $orderCount = (int)$stmt->fetchColumn();
 
-        // Đếm đơn đang giao
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM orders WHERE status = 'shipping'");
         $stmt->execute();
         $shippingOrderCount = (int)$stmt->fetchColumn();
 
-        // Đếm đơn hoàn tất
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM orders WHERE status = 'completed'");
         $stmt->execute();
         $completedOrderCount = (int)$stmt->fetchColumn();
 
-        // Doanh thu (chỉ tính đơn đã hoàn tất)
         $stmt = $this->pdo->prepare("SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE status = 'completed'");
         $stmt->execute();
         $revenue = (int)$stmt->fetchColumn();
@@ -116,9 +153,6 @@ class AdminProduct
         ];
     }
 
-    /**
-     * Lấy danh sách sản phẩm bán chạy nhất
-     */
     public function getTopSellingProducts(int $limit = 10): array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM products ORDER BY sales DESC, id DESC LIMIT :limit");
@@ -127,9 +161,6 @@ class AdminProduct
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Lấy danh sách đơn hàng mới nhất (kèm số lượng sản phẩm trong đơn)
-     */
     public function getLatestOrders(int $limit = 5): array
     {
         $sql = "SELECT o.*, 
@@ -143,6 +174,65 @@ class AdminProduct
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // =========================================================
+    // HÀM LẤY TẤT CẢ SẢN PHẨM (CHO ADMIN)
+    // =========================================================
+    
+    /**
+     * Lấy tất cả sản phẩm
+     */
+    public function getAll(int $limit = 100): array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM products ORDER BY id DESC LIMIT :limit");
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // =========================================================
+    // HÀM TÌM KIẾM SẢN PHẨM (ADMIN)
+    // =========================================================
+
+    /**
+     * Tìm kiếm sản phẩm theo tên (tìm theo từng từ)
+     * VD: "poco f6" → tìm sản phẩm có cả "poco" VÀ "f6" trong tên/hãng/chip
+     */
+    public function searchProducts(string $keyword): array
+    {
+        $keyword = trim($keyword);
+        if ($keyword === '') {
+            return $this->getAll(100);
+        }
+
+        // Tách từ khóa thành các từ riêng biệt
+        $words = preg_split('/\s+/', $keyword, -1, PREG_SPLIT_NO_EMPTY);
+        
+        if (empty($words)) {
+            return $this->getAll(100);
+        }
+
+        // Xây dựng câu WHERE với positional parameters (?)
+        $conditions = [];
+        $params = [];
+        
+        foreach ($words as $word) {
+            // Mỗi từ cần 3 placeholder riêng cho 3 cột
+            $conditions[] = "(name LIKE ? OR brand LIKE ? OR cpu LIKE ?)";
+            $searchTerm = "%{$word}%";
+            $params[] = $searchTerm; // cho name
+            $params[] = $searchTerm; // cho brand
+            $params[] = $searchTerm; // cho cpu
+        }
+
+        $whereSql = 'WHERE ' . implode(' AND ', $conditions);
+        $sql = "SELECT * FROM products {$whereSql} ORDER BY id DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
