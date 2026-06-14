@@ -28,7 +28,7 @@ $buttonText = $editingProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩ
                 <div>
                     <span class="eyebrow">CRUD</span>
                     <h1>Quản lý sản phẩm</h1>
-                    <p class="admin-page-note">Thêm, sửa và kiểm tra danh sách sản phẩm bằng giao diện đơn giản, ưu tiên thao tác nhanh và dễ nhìn.</p>
+                    <p class="admin-page-note">Thêm , sửa và xóa sản phẩm</p>
                 </div>
                 <a class="btn btn-primary" href="index.php?page=admin_products"><i class="fa-solid fa-plus"></i> Thêm sản phẩm mới</a>
             </div>
@@ -39,7 +39,7 @@ $buttonText = $editingProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩ
             <section class="admin-card admin-form-card">
                 <h2><?= $editingProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm' ?></h2>
 
-                <!-- ✅ ĐÃ SỬA: Thêm enctype="multipart/form-data" để upload được file -->
+                <!-- Thêm enctype="multipart/form-data" để upload được file -->
                 <form class="admin-product-form mt-4" method="post" action="<?= e($actionUrl) ?>" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="<?= (int)($editingProduct['id'] ?? 0) ?>">
 
@@ -103,7 +103,7 @@ $buttonText = $editingProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩ
                                 <input class="form-control" type="number" name="rating" min="1" max="5" value="<?= (int)($editingProduct['rating'] ?? 5) ?>" required>
                             </div>
 
-                            <!-- ✅ ĐÃ SỬA: Phần upload ảnh -->
+                            <!-- Phần upload ảnh -->
                             <div class="col-12">
                                 <label class="form-label fw-bold">Ảnh sản phẩm <span class="text-danger">*</span></label>
 
@@ -221,7 +221,6 @@ $buttonText = $editingProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩ
                     </div>
 
                     <hr class="mb-4">
-                    <!-- ✅ ĐÃ SỬA: Nút bấm hiển thị text động -->
                     <button type="submit" class="btn btn-primary btn-lg w-100">
                         <i class="fa-solid fa-floppy-disk"></i> <?= e($buttonText) ?>
                     </button>
@@ -229,55 +228,76 @@ $buttonText = $editingProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩ
             </section>
 
             <section class="admin-card">
-                <div class="admin-card-head">
-                    <h2>Danh sách sản phẩm từ cơ sở dữ liệu</h2>
-                    <span><?= count($products) ?> dòng</span>
-                </div>
-                <div class="admin-table-wrap table-responsive">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Sản phẩm</th>
-                                <th>Hãng</th>
-                                <th>Giá</th>
-                                <th>Kho</th>
-                                <th>Tình trạng</th>
-                                <th>Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($products as $product): ?>
+                <?php $searchKeyword = $data['searchKeyword'] ?? ''; ?>
+
+                <section class="admin-card">
+                    <!-- Form tìm kiếm -->
+                    <form class="header-search mb-3" action="index.php" method="get" style="max-width: 500px;">
+                        <input type="hidden" name="page" value="admin_products">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="search" name="search"
+                            value="<?= e($searchKeyword) ?>"
+                            placeholder="Tìm theo tên, hãng, chip..."
+                            style="flex: 1; border: 0; outline: 0; background: transparent;">
+                        <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                        <?php if ($searchKeyword !== ''): ?>
+                            <a href="index.php?page=admin_products" class="btn btn-soft btn-sm">
+                                <i class="fa-solid fa-xmark"></i> Xóa
+                            </a>
+                        <?php endif; ?>
+                    </form>
+
+                    <div class="admin-card-head">
+                        <h2>
+                            <?= $searchKeyword !== '' ? 'Kết quả tìm kiếm: "' . e($searchKeyword) . '"' : 'Danh sách sản phẩm từ cơ sở dữ liệu' ?>
+                        </h2>
+                        <span><?= count($products) ?> sản phẩm</span>
+                    </div>
+                    <div class="admin-table-wrap table-responsive">
+                        <table class="admin-table">
+                            <thead>
                                 <tr>
-                                    <td>#<?= (int)$product['id'] ?></td>
-                                    <td>
-                                        <div class="admin-product-cell">
-                                            <img src="<?= e($product['image']) ?>" alt="<?= e($product['name']) ?>">
-                                            <div>
-                                                <strong><?= e($product['name']) ?></strong>
-                                                <span><?= e($product['cpu']) ?></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><?= e($product['brand']) ?></td>
-                                    <td><?= e(format_vnd($product['price'])) ?></td>
-                                    <td><span class="stock-pill"><?= (int)$product['quantity'] ?></span></td>
-                                    <td><?= e(condition_label($product['condition'])) ?></td>
-                                    <td>
-                                        <div class="admin-actions admin-actions-inline">
-                                            <a class="icon-action" href="index.php?page=admin_products&edit=<?= (int)$product['id'] ?>" title="Sửa"><i class="fa-solid fa-pen"></i></a>
-                                            <form method="post" action="index.php?page=admin_product_delete" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
-                                                <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
-                                                <button type="submit" class="icon-action danger" title="Xóa"><i class="fa-solid fa-trash"></i></button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                    <th>ID</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Hãng</th>
+                                    <th>Giá</th>
+                                    <th>Kho</th>
+                                    <th>Tình trạng</th>
+                                    <th>Hành động</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($products as $product): ?>
+                                    <tr>
+                                        <td>#<?= (int)$product['id'] ?></td>
+                                        <td>
+                                            <div class="admin-product-cell">
+                                                <img src="<?= e($product['image']) ?>" alt="<?= e($product['name']) ?>">
+                                                <div>
+                                                    <strong><?= e($product['name']) ?></strong>
+                                                    <span><?= e($product['cpu']) ?></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><?= e($product['brand']) ?></td>
+                                        <td><?= e(format_vnd($product['price'])) ?></td>
+                                        <td><span class="stock-pill"><?= (int)$product['quantity'] ?></span></td>
+                                        <td><?= e(condition_label($product['condition'])) ?></td>
+                                        <td>
+                                            <div class="admin-actions admin-actions-inline">
+                                                <a class="icon-action" href="index.php?page=admin_products&edit=<?= (int)$product['id'] ?>" title="Sửa"><i class="fa-solid fa-pen"></i></a>
+                                                <form method="post" action="index.php?page=admin_product_delete" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
+                                                    <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
+                                                    <button type="submit" class="icon-action danger" title="Xóa"><i class="fa-solid fa-trash"></i></button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
         </main>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
