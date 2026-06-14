@@ -1,8 +1,4 @@
-<?php
-// Đảm bảo đã require file AdminModel
-require_once __DIR__ . '/../Models/AdminModel.php'; 
-require_once __DIR__ . '/../Models/AdminModel.php';
-
+<?php 
 class AdminController
 {
     private $productModel;
@@ -11,7 +7,7 @@ class AdminController
     public function __construct($productModel)
     {
         $this->productModel = $productModel;
-        $this->adminModel = new AdminProduct();
+        $this->adminModel = new AdminModel();
     }
 
     // =========================================================

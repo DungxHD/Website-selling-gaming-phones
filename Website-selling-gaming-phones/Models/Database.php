@@ -1,17 +1,4 @@
 <?php
-// =========================================================
-// MODEL DATABASE (PDO)
-// =========================================================
-// Mục tiêu file này:
-// - Chỉ làm 1 nhiệm vụ: kết nối CSDL bằng PDO.
-// - Không trộn HTML vào đây.
-// - Controller/Model khác sẽ gọi Database::connect() để lấy PDO và query.
-//
-// Gợi ý khi học MVC:
-// - Model: xử lý dữ liệu (query, insert, update...)
-// - Controller: nhận request, gọi model, rồi trả dữ liệu cho view
-// - View: chỉ hiển thị (HTML/CSS/JS), hạn chế viết query trong view
-
 class Database
 {
     private ?PDO $pdo = null;

@@ -1,7 +1,5 @@
-<?php
-require_once __DIR__ . '/Database.php';
-
-class AdminProduct
+<?php  
+class AdminModel
 {
     private PDO $pdo;
 
