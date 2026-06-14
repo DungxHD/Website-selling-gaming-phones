@@ -1,3 +1,6 @@
+<?php
+$currentPage = $data['page'] ?? 'forgot';
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -10,38 +13,96 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-<?php include __DIR__ . '/partials/header.php'; ?>
+    <?php include __DIR__ . '/partials/header.php'; ?>
 
-<main class="auth-page">
-    <section class="auth-card register-card">
-        <div class="auth-intro">
-            <span class="eyebrow">Quên mật khẩu</span>
-            <h1>Đổi mật khẩu nhanh</h1>
-            <p>Vì đây là project học tập nên form này được làm đơn giản: nhập tên đăng nhập và thông tin liên hệ để đổi mật khẩu mới.</p>
-        </div>
-        <form class="auth-form" method="post" action="index.php?page=forgot&action=forgot_password">
-            <label>Tên đăng nhập
-                <input type="text" name="username" required autocomplete="username">
-            </label>
-            <label>Liên hệ (số điện thoại/email)
-                <input type="text" name="contact" required placeholder="VD: 098xxxxxxx">
-            </label>
-            <label>Mật khẩu mới
-                <input type="password" name="new_password" required autocomplete="new-password">
-            </label>
-            <button class="btn btn-primary w-100" type="submit">Cập nhật mật khẩu</button>
-            <div class="auth-links">
-                <a href="index.php?page=login">Quay lại đăng nhập</a>
-                <a href="index.php?page=home">Về trang chủ</a>
+    <main class="auth-page">
+        <div class="auth-card">
+            <!-- ========================================================= -->
+            <!-- PHẦN GIỚI THIỆU (BÊN TRÁI) -->
+            <!-- ========================================================= -->
+            <div class="auth-intro">
+                <span class="eyebrow">Quên mật khẩu</span>
+                <h1>Đổi mật khẩu nhanh</h1>
+                <p>
+                    Vì đây là project học tập nên form này được làm đơn giản:
+                    nhập tên đăng nhập và thông tin liên hệ để đổi mật khẩu mới.
+                </p>
+
+                <!-- Lưu ý cơ chế đơn giản hóa -->
+                <div style="margin-top: 20px; padding: 14px; background: var(--surface-2); border-radius: 8px; border-left: 3px solid var(--primary);">
+                    <strong style="display: flex; align-items: center; gap: 8px; color: var(--primary); margin-bottom: 6px;">
+                        <i class="fa-solid fa-circle-info"></i> Lưu ý
+                    </strong>
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--muted);">
+                        Trong thực tế, hệ thống sẽ gửi email/SMS xác nhận.
+                        Ở đây chúng ta đổi trực tiếp để đơn giản hóa cho việc học.
+                    </p>
+                </div>
+
+                <div class="auth-links" style="flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 20px;">
+                    <a href="index.php?page=login">
+                        <i class="fa-solid fa-arrow-left"></i> Quay lại đăng nhập
+                    </a>
+                    <a href="index.php?page=home">
+                        <i class="fa-solid fa-house"></i> Về trang chủ
+                    </a>
+                </div>
             </div>
-        </form>
-    </section>
-</main>
 
-<?php include __DIR__ . '/partials/footer.php'; ?>
-<script src="assets/js/main.js"></script>
+            <!-- ========================================================= -->
+            <!-- PHẦN FORM QUÊN MẬT KHẨU (BÊN PHẢI) -->
+            <!-- ========================================================= -->
+            <div>
+                <div style="margin-bottom: 18px;">
+                    <span class="eyebrow">Khôi phục tài khoản</span>
+                    <h2 style="margin: 6px 0 4px; font-family: var(--font-head); font-size: 2rem;">
+                        Đặt lại mật khẩu
+                    </h2>
+                    <p style="color: var(--muted); margin: 0;">
+                        Điền đầy đủ 3 trường bên dưới để xác minh và đổi mật khẩu mới.
+                    </p>
+                </div>
+
+                <form class="auth-form" method="post" action="index.php?page=forgot" autocomplete="off">
+                    <label>
+                        Tên đăng nhập <span style="color: var(--accent);">*</span>
+                        <input type="text"
+                               name="username"
+                               required
+                               placeholder="VD: gaming_thu_99"
+                               value="<?= e($_POST['username'] ?? '') ?>">
+                    </label>
+                    <label>
+                        Liên hệ (SĐT/Email đã đăng ký) <span style="color: var(--accent);">*</span>
+                        <input type="text"
+                               name="contact"
+                               required
+                               placeholder="Phải trùng với thông tin khi đăng ký"
+                               value="<?= e($_POST['contact'] ?? '') ?>">
+                    </label>
+                    <label>
+                        Mật khẩu mới <span style="color: var(--accent);">*</span>
+                        <input type="password"
+                               name="new_password"
+                               required
+                               minlength="6"
+                               placeholder="Tối thiểu 6 ký tự"
+                               autocomplete="new-password">
+                    </label>
+                    <button class="btn btn-primary w-100" type="submit">
+                        <i class="fa-solid fa-rotate-right"></i> Cập nhật mật khẩu
+                    </button>
+                </form>
+
+                <div class="auth-links" style="margin-top: 16px; justify-content: center;">
+                    <a href="index.php?page=login">Quay lại đăng nhập</a>
+                    <a href="index.php?page=register">Đăng ký tài khoản mới</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <?php include __DIR__ . '/partials/footer.php'; ?>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
-
-
-

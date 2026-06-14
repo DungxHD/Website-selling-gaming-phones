@@ -8,40 +8,76 @@ class CartModel
     public int $total = 0;
 
     public function __construct(
-        private Product $productModel,
-        private array $cartSession
+        private Product $productModel
     ) {
-        // Tự động kích hoạt việc tính toán ngay khi class được khởi tạo
-        $this->processCart();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
     }
 
-    // Hàm nội bộ dùng để tính tiền và nhét dữ liệu vào biến $rows và $total
-    private function processCart(): void
+    public function add(int $productId, int $quantity): void
     {
-        // Kiểm tra nếu giỏ hàng trống thì dừng lại luôn
-        if (empty($this->cartSession)) {
-            return;
-        }
+        if ($productId <= 0 || $quantity <= 0) return;
 
-        // Duyệt qua từng sản phẩm trong giỏ hàng thô (ID => Số lượng)
-        foreach ($this->cartSession as $productId => $quantity) {
-            // Dùng productModel để lấy thông tin chi tiết của máy từ database
+        if (isset($_SESSION['cart'][$productId])) {
+            $_SESSION['cart'][$productId] += $quantity;
+        } else {
+            $_SESSION['cart'][$productId] = $quantity;
+        }
+    }
+
+    public function update(int $productId, int $quantity): void
+    {
+        if ($productId <= 0) return;
+
+        if ($quantity <= 0) {
+            $this->delete($productId);
+        } else {
+            $_SESSION['cart'][$productId] = $quantity;
+        }
+    }
+
+    public function delete(int $productId): void
+    {
+        if (isset($_SESSION['cart'][$productId])) {
+            unset($_SESSION['cart'][$productId]);
+        }
+    }
+
+    public function clear(): void
+    {
+        $_SESSION['cart'] = [];
+    }
+
+    public function getCartDetails(): array
+    {
+        $this->rows = [];
+        $this->total = 0;
+        $cartSession = $_SESSION['cart'] ?? [];
+
+        foreach ($cartSession as $productId => $quantity) {
             $product = $this->productModel->getById((int)$productId);
 
             if ($product) {
-                // Tính thành tiền của món này = Giá máy * Số lượng mua
-                $subTotal = $product['price'] * $quantity;
+                $lineTotal = (int)$product['price'] * (int)$quantity;
+                $this->total += $lineTotal;
 
-                // Đóng gói thông tin đầy đủ và nhét vào mảng $rows
                 $this->rows[] = [
-                    'product' => $product,
-                    'quantity' => $quantity,
-                    'subTotal' => $subTotal
+                    'product'   => $product,
+                    'quantity'  => (int)$quantity,
+                    'lineTotal' => $lineTotal // Đồng bộ hoàn toàn với View
                 ];
-
-                // Cộng dồn vào tổng tiền của cả giỏ hàng
-                $this->total += $subTotal;
+            } else {
+                $this->delete((int)$productId);
             }
         }
+
+        return [
+            'rows'  => $this->rows,
+            'total' => $this->total
+        ];
     }
 }

@@ -142,4 +142,53 @@ class User
         $stmt = $this->pdo->prepare("UPDATE users SET is_active = :status WHERE id = :id");
         return $stmt->execute([':status' => $newStatus, ':id' => $id]);
     }
+        /**
+     * Tìm user theo username VÀ contact (dùng cho Quên mật khẩu)
+     *
+     * NHẬN XÉT:
+     * - Hàm này phục vụ riêng cho luồng "Quên mật khẩu" ở frontend.
+     * - Vì đây là project học tập nên ta dùng contact (SĐT/Email) để xác minh thay vì gửi email thật.
+     *
+     * CẢI THIỆN:
+     * - Về sau khi làm thật, nên thay bằng cơ chế gửi OTP qua email/SMS rồi mới cho đổi mật khẩu.
+     */
+    public function findByUsernameAndContact(string $username, string $contact): array|false
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT * FROM users
+             WHERE username = :username
+               AND contact  = :contact
+               AND role     = 'user'
+             LIMIT 1"
+        );
+        $stmt->execute([
+            ':username' => $username,
+            ':contact'  => $contact,
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Cập nhật mật khẩu mới cho user
+     *
+     * NHẬN XÉT:
+     * - Tách riêng hàm này để AuthController có thể tái sử dụng cho cả 2 luồng:
+     *   + forgotPassword() (quên mật khẩu từ bên ngoài)
+     *   + changePassword() (đổi mật khẩu khi đã đăng nhập)
+     *
+     * CẢI THIỆN:
+     * - Khi làm production thật, mật khẩu phải được hash bằng password_hash()
+     *   và verify bằng password_verify(). Ở đây ta giữ plain text để đồng bộ
+     *   với hàm verifyLogin() đang có sẵn trong class này.
+     */
+    public function updatePassword(int $userId, string $newPassword): bool
+    {
+        $stmt = $this->pdo->prepare(
+            "UPDATE users SET password = :password WHERE id = :id"
+        );
+        return $stmt->execute([
+            ':password' => $newPassword,
+            ':id'       => $userId,
+        ]);
+    }
 }

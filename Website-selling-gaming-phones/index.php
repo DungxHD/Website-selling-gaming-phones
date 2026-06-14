@@ -41,7 +41,7 @@ function render_view(string $view, array $data = []): void
 // =========================================================================
 // 3. BẢN ĐỒ ĐỊNH TUYẾN (ROUTING MAPS)
 // =========================================================================
-$page = $_GET['page'] ?? 'home';
+$page = $_GET['page'] ?? $_GET['action'] ?? 'home';
 $productModel = new Product();
 $result = null;
 
@@ -54,6 +54,14 @@ $routes = [
 
     // --- Giỏ hàng ---
     'cart'                 => ['CartController', 'cart'],
+    'cart_add'             => ['CartController', 'add'],
+
+    // --- Xác thực User (Frontend) ---
+    'login'                => ['AuthController', 'login'],
+    'register'             => ['AuthController', 'register'],
+    'logout'               => ['AuthController', 'logout'],
+    'forgot'               => ['AuthController', 'forgotPassword'],
+    'change_password'      => ['AuthController', 'changePassword'],
 
     // --- Xác thực (Auth Admin) ---
     'admin_login'          => ['AuthController', 'adminLogin'],
@@ -72,12 +80,8 @@ $routes = [
     'admin_product_update' => ['AdminController', 'updateProduct'],
 ];
 
-// Các trang giao diện tĩnh (Chưa có Controller xử lý)
+// Các trang giao diện tĩnh (Chỉ hiển thị, không có Controller xử lý)
 $simpleViews = [
-    'login'           => 'frontend/login.php',
-    'register'        => 'frontend/register.php',
-    'forgot'          => 'frontend/forgot.php',
-    'change_password' => 'frontend/change_password.php',
     'checkout'        => 'frontend/checkout.php',
     'admin_orders'    => 'backend/orders.php',
 ];
@@ -97,7 +101,21 @@ $adminProtectedPages = [
     'admin_orders',
     'admin_logout',
 ];
+// =========================================================================
+// 4.1. TẦNG BẢO VỆ CHO USER (USER GUARD)
+// =========================================================================
+// Các trang bắt buộc user phải đăng nhập mới được truy cập
+$userProtectedPages = [
+    'change_password',
+    'checkout', // Nếu muốn bắt login trước khi thanh toán
+];
 
+if (in_array($page, $userProtectedPages, true) && empty($_SESSION['user'])) {
+    // Lưu lại URL hiện tại để sau khi login sẽ quay lại
+    $_SESSION['redirect_after_login'] = 'index.php?page=' . $page;
+    flash('error', 'Vui lòng đăng nhập để tiếp tục!');
+    redirect_to('index.php?page=login');
+}
 // Đẩy về trang đăng nhập nếu truy cập Admin mà không có session quyền Admin
 if (in_array($page, $adminProtectedPages, true) && empty($_SESSION['admin'])) {
     $_SESSION['flash']['error'] = 'Vui lòng đăng nhập để truy cập trang quản trị!';

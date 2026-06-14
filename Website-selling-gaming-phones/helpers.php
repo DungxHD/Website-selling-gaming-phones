@@ -114,33 +114,16 @@ function order_status_color(string $status): string
  */
 function cart_items_count(): int
 {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
         return (int)array_sum($_SESSION['cart']);
     }
     return 0;
 }
 
-/**
- * Giả lập kết nối lấy chi tiết giỏ hàng.
- * (Lưu ý: Nếu CartController đã xử lý, hàm này có thể được gỡ bỏ để code gọn hơn).
- */
-function build_cart_rows(object $productModel): array
-{
-    $cart = $_SESSION['cart'] ?? [];
-    $items = [];
-
-    foreach ($cart as $id => $quantity) {
-        $product = $productModel->getById((int)$id);
-        if ($product) {
-            $items[] = [
-                'product'   => $product,
-                'quantity'  => $quantity,
-                'lineTotal' => $product['price'] * $quantity
-            ];
-        }
-    }
-    return $items;
-}
+// Đã loại bỏ hàm build_cart_rows() vì logic xử lý giỏ hàng đã được giao hoàn toàn cho CartModel.
 
 // =========================================================================
 // PHẦN 4: GIAO DIỆN COMPONENT (UI COMPONENTS & RENDERERS)
@@ -159,7 +142,8 @@ function rating_stars(mixed $rating): string
         str_repeat('<i class="fa-regular fa-star"></i>', $emptyValue);
 }
 
- /* Hàm dịch phương thức thanh toán từ tiếng Anh sang tiếng Việt
+/**
+ * Hàm dịch phương thức thanh toán từ tiếng Anh sang tiếng Việt
  */
 function payment_method_label(string $method): string
 {
@@ -171,6 +155,7 @@ function payment_method_label(string $method): string
         default  => 'Phương thức khác',
     };
 }
+
 /**
  * Khối component thẻ sản phẩm (Tái sử dụng ở Trang chủ, Cửa hàng, Chi tiết).
  */
@@ -240,7 +225,7 @@ function render_product_card(array $product, string $returnUrl = ''): void
 
             <div class="product-actions">
                 <a class="btn btn-primary" href="<?= $safeUrl ?>">Mua ngay</a>
-                <form class="product-quick-form" method="post" action="index.php?page=cart&action=cart_add">
+                <form class="product-quick-form" method="post" action="index.php?page=cart_add">
                     <input type="hidden" name="product_id" value="<?= $id ?>">
                     <input type="hidden" name="quantity" value="1">
                     <input type="hidden" name="redirect" value="<?= e($returnUrl) ?>">

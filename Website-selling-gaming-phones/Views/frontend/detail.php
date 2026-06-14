@@ -55,7 +55,7 @@ $isOutOfStock = (int)($product['quantity'] ?? 0) <= 0;
                             <span>Sản phẩm này đang hết hàng. Bạn có thể xem mẫu khác hoặc chờ admin cập nhật lại tồn kho.</span>
                         </div>
                     <?php else: ?>
-                        <form method="post" action="index.php?action=cart_add" class="buy-box">
+                        <form method="post" action="index.php?page=cart_add" class="buy-box">
                             <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
                             <input type="hidden" name="redirect" value="index.php?page=detail&id=<?= (int)$product['id'] ?>">
                             <label>
