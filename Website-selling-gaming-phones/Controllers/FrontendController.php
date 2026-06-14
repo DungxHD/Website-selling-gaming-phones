@@ -10,7 +10,7 @@ class FrontendController
     private const RELATED_PRODUCTS_LIMIT = 8; // Số sản phẩm liên quan cùng thương hiệu
 
     public function __construct(
-        private Product $productModel = new Product()
+        private Product $productModel = new Product() 
     ) {}
 
     // =========================================================

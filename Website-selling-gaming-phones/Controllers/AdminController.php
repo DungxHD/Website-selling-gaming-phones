@@ -1,6 +1,6 @@
 <?php
 // Đảm bảo đã require file AdminModel
-require_once __DIR__ . '/../Models/AdminModel.php';
+require_once __DIR__ . '/../Models/AdminModel.php'; 
 
 class AdminController
 {

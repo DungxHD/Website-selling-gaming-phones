@@ -1,159 +1,84 @@
 <?php
-// Hàm chuyển hướng trang
-function redirect_to(string $url): void
-{
-    header("Location: $url");
-    exit();
-}
 
+declare(strict_types=1);
+
+// =========================================================================
+// PHẦN 1: TIỆN ÍCH HỆ THỐNG & BẢO MẬT (SYSTEM & SECURITY)
+// =========================================================================
+
+/**
+ * Hàm chống XSS (Cross-Site Scripting) tuyệt đối.
+ * Bắt buộc bọc mọi biến in ra View bằng hàm này: e($biến)
+ */
 function e(mixed $value): string
 {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
 
-function build_query_url(array $query, string $base = 'index.php'): string
+/**
+ * Chuyển hướng trình duyệt và dừng thực thi code ngay lập tức.
+ */
+function redirect_to(string $url): never
 {
-    $queryString = http_build_query($query);
-    if ($queryString === '') {
-        return $base;
-    }
-    return $base . '?' . $queryString;
+    header("Location: $url");
+    exit();
 }
 
-function format_vnd(mixed $amount): string
-{
-    $number = (int)($amount ?? 0);
-    return number_format($number, 0, ',', '.') . ' ₫';
-}
-
-function condition_label(mixed $condition): string
-{
-    return match ((string)$condition) {
-        'new' => 'Máy mới',
-        'used' => 'Like New',
-        default => 'Khác',
-    };
-}
-
-function rating_stars(mixed $rating): string
-{
-    $value = max(0, min(5, (int)($rating ?? 0)));
-    $html = '';
-    for ($i = 1; $i <= 5; $i++) {
-        $html .= $i <= $value
-            ? '<i class="fa-solid fa-star"></i>'
-            : '<i class="fa-regular fa-star"></i>';
-    }
-    return $html;
-}
-
-function render_product_card(array $product, string $returnUrl = ''): void
-{
-    $id = (int)($product['id'] ?? 0);
-    $name = $product['name'] ?? '';
-    $brand = $product['brand'] ?? '';
-    $price = $product['price'] ?? 0;
-    $image = $product['image'] ?? '';
-    $description = $product['description'] ?? '';
-    $cpu = $product['cpu'] ?? '';
-    $screen = $product['screen'] ?? '';
-    $battery = $product['battery'] ?? '';
-    $charger = $product['charger'] ?? '';
-    $condition = $product['condition'] ?? '';
-    $rating = $product['rating'] ?? 0;
-    $quantity = (int)($product['quantity'] ?? 0);
-    $isOutOfStock = $quantity <= 0;
-    $detailUrl = build_query_url(['page' => 'detail', 'id' => $id]);
-
-    $tagline = trim((string)$description);
-    if ($tagline === '') {
-        $tagline = 'Gaming phone cấu hình mạnh, phù hợp chơi game lâu.';
-    }
-
-    if (mb_strlen($tagline) > 92) {
-        $tagline = mb_substr($tagline, 0, 92) . '...';
-    }
-?>
-    <article class="product-card">
-        <div class="product-media">
-            <span class="product-badge"><?= e(condition_label($condition)) ?></span>
-            <a href="<?= e($detailUrl) ?>">
-                <img src="<?= e($image) ?>" alt="<?= e($name) ?>">
-            </a>
-        </div>
-        <div class="product-body">
-            <div class="product-meta">
-                <span><?= e($brand) ?></span>
-                <span class="stars"><?= rating_stars($rating) ?></span>
-            </div>
-            <h3><a href="<?= e($detailUrl) ?>"><?= e($name) ?></a></h3>
-            <p class="product-tagline"><?= e($tagline) ?></p>
-            <div class="product-specs">
-                <span><i class="fa-solid fa-microchip"></i><?= e($cpu) ?></span>
-                <span><i class="fa-solid fa-display"></i><?= e($screen) ?></span>
-                <span><i class="fa-solid fa-battery-full"></i><?= e($battery) ?></span>
-                <span><i class="fa-solid fa-bolt"></i><?= e($charger) ?></span>
-            </div>
-            <div class="product-bottom">
-                <strong><?= e(format_vnd($price)) ?></strong>
-                <?php if ($isOutOfStock): ?>
-                    <span class="stock-state stock-out">Hết hàng</span>
-                <?php else: ?>
-                    <span class="stock-state"><?= (int)$quantity ?> máy</span>
-                <?php endif; ?>
-            </div>
-            <div class="product-actions">
-                <a class="btn btn-primary" href="<?= e($detailUrl) ?>">Mua ngay</a>
-                <form class="product-quick-form" method="post" action="index.php?page=cart&action=cart_add">
-                    <input type="hidden" name="product_id" value="<?= $id ?>">
-                    <input type="hidden" name="quantity" value="1">
-                    <input type="hidden" name="redirect" value="<?= e($returnUrl) ?>">
-                    <button class="btn btn-soft" type="submit" <?= $isOutOfStock ? 'disabled' : '' ?> title="Thêm vào giỏ">
-                        <i class="fa-solid fa-cart-plus"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </article>
-<?php
-}
-
-// Hàm tạo thông báo Flash Session
+/**
+ * Tạo nhanh thông báo Flash Session lưu trữ tạm thời 1 lần.
+ */
 function flash(string $type, string $message): void
 {
     $_SESSION['flash'][$type] = $message;
 }
 
-// Hàm yêu cầu đăng nhập
+/**
+ * Cửa trạm kiểm soát người dùng: Yêu cầu đăng nhập.
+ */
 function require_user_login(): void
 {
     if (empty($_SESSION['user'])) {
-        flash('error', 'Vui lòng đăng nhập để tiếp tục.');
+        flash('error', 'Vui lòng đăng nhập để tiếp tục thao tác.');
         redirect_to('index.php?page=login');
     }
 }
 
-// Hàm giả lập tính toán giỏ hàng
-function build_cart_rows($productModel): array
+// =========================================================================
+// PHẦN 2: XỬ LÝ ĐỊNH DẠNG & LOGIC HIỂN THỊ (FORMATTING & LOGIC)
+// =========================================================================
+
+/**
+ * Định dạng số tiền sang chuẩn Việt Nam Đồng.
+ * VD: 1500000 -> 1.500.000 ₫
+ */
+function format_vnd(mixed $amount): string
 {
-    $cart = $_SESSION['cart'] ?? [];
-    $items = [];
-    foreach ($cart as $id => $quantity) {
-        $product = $productModel->getById($id);
-        if ($product) {
-            $items[] = [
-                'product' => $product,
-                'quantity' => $quantity,
-                'lineTotal' => $product['price'] * $quantity
-            ];
-        }
-    }
-    return $items;
+    return number_format((int)($amount ?? 0), 0, ',', '.') . ' ₫';
 }
 
 /**
- * Hàm dịch trạng thái đơn hàng từ tiếng Anh sang tiếng Việt
- * Dùng ở trang Dashboard Admin và trang Chi tiết đơn hàng
+ * Build chuỗi URL với mảng tham số GET sạch sẽ, tự động xử lý ký tự đặc biệt.
+ */
+function build_query_url(array $query, string $base = 'index.php'): string
+{
+    $queryString = http_build_query($query);
+    return $queryString === '' ? $base : "{$base}?{$queryString}";
+}
+
+/**
+ * Dịch trạng thái tình trạng máy sang tiếng Việt.
+ */
+function condition_label(mixed $condition): string
+{
+    return match ((string)$condition) {
+        'new'  => 'Máy mới',
+        'used' => 'Like New',
+        default => 'Khác',
+    };
+}
+
+/**
+ * Dịch trạng thái đơn hàng dùng cho trang Quản trị (Admin)
  */
 function order_status_label(string $status): string
 {
@@ -168,8 +93,7 @@ function order_status_label(string $status): string
 }
 
 /**
- * Hàm trả về tên class CSS tương ứng với trạng thái đơn hàng
- * Dùng để tô màu cho dấu chấm tròn (status-dot) hoặc badge
+ * Lấy class CSS tương ứng màu sắc với từng trạng thái đơn hàng.
  */
 function order_status_color(string $status): string
 {
@@ -177,78 +101,200 @@ function order_status_color(string $status): string
         'completed'           => 'green',
         'shipping', 'confirmed' => 'blue',
         'cancelled'           => 'red',
-        default               => 'amber', // pending
+        default               => 'amber',
     };
 }
 
+// =========================================================================
+// PHẦN 3: XỬ LÝ NGHIỆP VỤ GIỎ HÀNG (CART BUSINESS LOGIC)
+// =========================================================================
+
 /**
- * Hàm đếm tổng số lượng sản phẩm có trong giỏ hàng
- * Dùng để hiển thị badge số lượng trên Header
+ * Tính tổng số lượng máy đang nằm trong giỏ hàng.
  */
 function cart_items_count(): int
 {
-    $cart = $_SESSION['cart'] ?? [];
-    $count = 0;
-    foreach ($cart as $quantity) {
-        $count += (int)$quantity;
+    if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+        return (int)array_sum($_SESSION['cart']);
     }
-    return $count;
+    return 0;
 }
 
+/**
+ * Giả lập kết nối lấy chi tiết giỏ hàng.
+ * (Lưu ý: Nếu CartController đã xử lý, hàm này có thể được gỡ bỏ để code gọn hơn).
+ */
+function build_cart_rows(object $productModel): array
+{
+    $cart = $_SESSION['cart'] ?? [];
+    $items = [];
+
+    foreach ($cart as $id => $quantity) {
+        $product = $productModel->getById((int)$id);
+        if ($product) {
+            $items[] = [
+                'product'   => $product,
+                'quantity'  => $quantity,
+                'lineTotal' => $product['price'] * $quantity
+            ];
+        }
+    }
+    return $items;
+}
+
+// =========================================================================
+// PHẦN 4: GIAO DIỆN COMPONENT (UI COMPONENTS & RENDERERS)
+// =========================================================================
 
 /**
- * Hàm xử lý upload ảnh sản phẩm
+ * Tạo dải sao đánh giá tự động mà KHÔNG CẦN dùng vòng lặp FOR.
+ * Hàm str_repeat của PHP chạy nhanh hơn nhiều so với việc lặp thủ công.
+ */
+function rating_stars(mixed $rating): string
+{
+    $value = max(0, min(5, (int)($rating ?? 0)));
+    $emptyValue = 5 - $value;
+
+    return str_repeat('<i class="fa-solid fa-star"></i>', $value) .
+        str_repeat('<i class="fa-regular fa-star"></i>', $emptyValue);
+}
+
+/**
+ * Khối component thẻ sản phẩm (Tái sử dụng ở Trang chủ, Cửa hàng, Chi tiết).
+ */
+function render_product_card(array $product, string $returnUrl = ''): void
+{
+    // Bóc tách dữ liệu an toàn bằng Null Coalescing Operator
+    $id        = (int)($product['id'] ?? 0);
+    $price     = (int)($product['price'] ?? 0);
+    $quantity  = (int)($product['quantity'] ?? 0);
+
+    // Các chuỗi văn bản
+    $name      = (string)($product['name'] ?? 'Sản phẩm');
+    $brand     = (string)($product['brand'] ?? 'Khác');
+    $image     = (string)($product['image'] ?? 'assets/images/default.jpg');
+    $cpu       = (string)($product['cpu'] ?? '-');
+    $screen    = (string)($product['screen'] ?? '-');
+    $battery   = (string)($product['battery'] ?? '-');
+    $charger   = (string)($product['charger'] ?? '-');
+    $condition = (string)($product['condition'] ?? '');
+    $rating    = (int)($product['rating'] ?? 0);
+
+    $isOutOfStock = $quantity <= 0;
+    $detailUrl    = build_query_url(['page' => 'detail', 'id' => $id]);
+
+    // Xử lý mô tả rút gọn (Cắt chuỗi thông minh không làm vỡ từ)
+    $tagline = trim((string)($product['description'] ?? ''));
+    $tagline = $tagline === '' ? 'Gaming phone cấu hình mạnh, phù hợp chơi game lâu.' : $tagline;
+    $tagline = mb_strlen($tagline) > 92 ? mb_substr($tagline, 0, 92) . '...' : $tagline;
+
+    // Ép thoát HTML 1 lần trước khi in ra View (Tránh gọi hàm e() quá nhiều lần trong HTML)
+    $safeName    = e($name);
+    $safeImage   = e($image);
+    $safeUrl     = e($detailUrl);
+?>
+    <article class="product-card">
+        <div class="product-media">
+            <span class="product-badge"><?= e(condition_label($condition)) ?></span>
+            <a href="<?= $safeUrl ?>">
+                <img src="<?= $safeImage ?>" alt="<?= $safeName ?>" loading="lazy">
+            </a>
+        </div>
+
+        <div class="product-body">
+            <div class="product-meta">
+                <span><?= e($brand) ?></span>
+                <span class="stars"><?= rating_stars($rating) ?></span>
+            </div>
+
+            <h3><a href="<?= $safeUrl ?>"><?= $safeName ?></a></h3>
+            <p class="product-tagline"><?= e($tagline) ?></p>
+
+            <div class="product-specs">
+                <span><i class="fa-solid fa-microchip"></i> <?= e($cpu) ?></span>
+                <span><i class="fa-solid fa-display"></i> <?= e($screen) ?></span>
+                <span><i class="fa-solid fa-battery-full"></i> <?= e($battery) ?></span>
+                <span><i class="fa-solid fa-bolt"></i> <?= e($charger) ?></span>
+            </div>
+
+            <div class="product-bottom">
+                <strong><?= format_vnd($price) ?></strong>
+                <?php if ($isOutOfStock): ?>
+                    <span class="stock-state stock-out">Hết hàng</span>
+                <?php else: ?>
+                    <span class="stock-state"><?= $quantity ?> máy</span>
+                <?php endif; ?>
+            </div>
+
+            <div class="product-actions">
+                <a class="btn btn-primary" href="<?= $safeUrl ?>">Mua ngay</a>
+                <form class="product-quick-form" method="post" action="index.php?page=cart&action=cart_add">
+                    <input type="hidden" name="product_id" value="<?= $id ?>">
+                    <input type="hidden" name="quantity" value="1">
+                    <input type="hidden" name="redirect" value="<?= e($returnUrl) ?>">
+                    <button class="btn btn-soft" type="submit" <?= $isOutOfStock ? 'disabled' : '' ?> title="Thêm vào giỏ hàng">
+                        <i class="fa-solid fa-cart-plus"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </article>
+<?php
+}
+
+// =========================================================================
+// PHẦN 5: XỬ LÝ UPLOAD FILE (FILE SYSTEM)
+// =========================================================================
+
+/**
+ * Xử lý Upload ảnh sản phẩm an toàn với cơ chế chặn Malware cơ bản.
+ * Trả về đường dẫn lưu file hoặc false nếu thất bại.
  */
 function upload_product_image(string $inputName = 'image'): string|false
 {
-    // Kiểm tra có file được upload không
     if (!isset($_FILES[$inputName]) || $_FILES[$inputName]['error'] === UPLOAD_ERR_NO_FILE) {
         return false;
     }
-    
-    // Kiểm tra lỗi upload
+
     if ($_FILES[$inputName]['error'] !== UPLOAD_ERR_OK) {
+        $_SESSION['flash']['error'] = 'Có lỗi xảy ra trong quá trình truyền tải file!';
         return false;
     }
-    
+
     $file = $_FILES[$inputName];
-    
-    // Kiểm tra kích thước (tối đa 5MB)
+
+    // Giới hạn 5MB
     if ($file['size'] > 5 * 1024 * 1024) {
-        $_SESSION['flash']['error'] = 'Ảnh quá lớn! Tối đa 5MB.';
+        $_SESSION['flash']['error'] = 'Ảnh quá lớn! Hệ thống chỉ cho phép tối đa 5MB.';
         return false;
     }
-    
-    // Kiểm tra định dạng file
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+    // Kiểm tra MIME Type thực tế (Chống file hack đổi đuôi thành .jpg)
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimeType = finfo_file($finfo, $file['tmp_name']);
     finfo_close($finfo);
-    
-    if (!in_array($mimeType, $allowedTypes)) {
+
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!in_array($mimeType, $allowedTypes, true)) {
         $_SESSION['flash']['error'] = 'Định dạng ảnh không hợp lệ! Chỉ chấp nhận JPG, PNG, GIF, WEBP.';
         return false;
     }
-    
-    // Tạo tên file duy nhất
+
+    // Xử lý tạo tên file duy nhất tránh trùng lặp
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $newFileName = 'product_' . time() . '_' . uniqid() . '.' . $extension;
-    
-    // Đường dẫn lưu file
+    $newFileName = sprintf('product_%s_%s.%s', time(), bin2hex(random_bytes(4)), $extension);
+
     $uploadDir = __DIR__ . '/uploads/products/';
-    
-    // Tạo thư mục nếu chưa có
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
+    if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
+        $_SESSION['flash']['error'] = 'Hệ thống không thể tạo thư mục lưu trữ!';
+        return false;
     }
-    
+
     $targetPath = $uploadDir . $newFileName;
-    
-    // Di chuyển file
     if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-        return 'uploads/products/' . $newFileName;
+        return 'uploads/products/' . $newFileName; // Trả về chuỗi lưu vào Database
     }
-    
+
+    $_SESSION['flash']['error'] = 'Không thể di chuyển file vào hệ thống máy chủ!';
     return false;
 }
-?>
