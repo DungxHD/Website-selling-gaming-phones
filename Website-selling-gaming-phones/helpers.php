@@ -159,6 +159,18 @@ function rating_stars(mixed $rating): string
         str_repeat('<i class="fa-regular fa-star"></i>', $emptyValue);
 }
 
+ /* Hàm dịch phương thức thanh toán từ tiếng Anh sang tiếng Việt
+ */
+function payment_method_label(string $method): string
+{
+    return match ($method) {
+        'cod'    => 'Thanh toán khi nhận hàng (COD)',
+        'bank'   => 'Chuyển khoản ngân hàng',
+        'momo'   => 'Ví MoMo',
+        'zalopay'=> 'ZaloPay',
+        default  => 'Phương thức khác',
+    };
+}
 /**
  * Khối component thẻ sản phẩm (Tái sử dụng ở Trang chủ, Cửa hàng, Chi tiết).
  */
