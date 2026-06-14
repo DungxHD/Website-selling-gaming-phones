@@ -9,8 +9,14 @@ class CartController
     ) {}
     public function cart(): array
     {
+        if ($_GET['action'] ?? '' === 'cart_add') {
+            $interface = 'frontend/' . $_GET['page'] . '.php';
+        } else {
+            $interface = 'frontend/cart.php';
+        }
+
         return [
-            'view' => 'frontend/cart.php',
+            'view' => $interface,
             'data' => [
                 'cartRows' => '',
                 'cartTotal' => 0,
