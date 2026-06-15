@@ -28,7 +28,12 @@ $orderStats = $data['orderStats'] ?? [];
         </div>
 
         <?php if (!empty($data['flash'])): ?>
-            <div class="flash flash-<?= e($data['flash']['type']) ?>"><?= e($data['flash']['message']) ?></div>
+            <script>
+                window.flashData = {
+                    type: "<?= e($data['flash']['type']) ?>",
+                    message: "<?= e($data['flash']['message']) ?>"
+                };
+            </script>
         <?php endif; ?>
 
         <section class="order-kanban">

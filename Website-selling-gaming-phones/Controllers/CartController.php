@@ -51,14 +51,32 @@ class CartController
         $productId = (int)($_POST['product_id'] ?? $_GET['id'] ?? 0);
         $quantity  = max(1, (int)($_POST['quantity'] ?? $_GET['quantity'] ?? 1));
 
+        $isSuccess = false;
+        $message = '';
+
         if ($productId > 0) {
             $this->cartModel->add($productId, $quantity);
-            flash('success', 'Đã thêm sản phẩm vào giỏ hàng thành công! 🛒');
+            $isSuccess = true;
+            $message = 'Đã thêm sản phẩm vào giỏ hàng thành công! 🛒';
         } else {
-            flash('error', 'Sản phẩm không hợp lệ. ⚠️');
+            $message = 'Sản phẩm không hợp lệ. ⚠️';
         }
 
-        // Lấy đường dẫn trang trước đó để quay lại, mặc định là trang shop
+        // Kiểm tra xem có phải là request từ AJAX/Fetch không
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
+        if ($isAjax) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => $isSuccess,
+                'message' => $message,
+                'cartCount' => function_exists('cart_items_count') ? cart_items_count() : 0
+            ]);
+            exit;
+        }
+
+        // Nếu không phải AJAX, thiết lập flash message và redirect (fallback)
+        flash($isSuccess ? 'success' : 'error', $message);
         $referer = $_POST['redirect'] ?? $_SERVER['HTTP_REFERER'] ?? 'index.php?page=shop';
         redirect_to($referer);
     }

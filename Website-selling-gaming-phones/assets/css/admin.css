@@ -1,26 +1,28 @@
+/* ===== ADMIN LAYOUT ===== */
 .admin-body,
 .admin-login-body {
-    background: #f4f6f8;
-    color: #1f2937;
+    background: #f8fafc;
+    color: #1e293b;
 }
 
 .admin-layout {
     min-height: 100vh;
     display: grid;
-    grid-template-columns: 270px minmax(0, 1fr);
-
+    grid-template-columns: 260px minmax(0, 1fr);
 }
 
+/* ===== ADMIN SIDEBAR ===== */
 .admin-sidebar {
     position: sticky;
     top: 0;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 22px;
-    color: #dbe4ee;
-    background: #0f172a;
+    gap: 18px;
+    padding: 20px;
+    color: #cbd5e1;
+    background: linear-gradient(180deg, #0f172a 0%, #131c33 100%);
+    overflow-y: auto;
 }
 
 .admin-brand {
@@ -29,24 +31,26 @@
     gap: 10px;
     color: #fff;
     font-family: var(--font-head);
-    font-size: 1.5rem;
-    font-weight: 800;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
 }
 
 .admin-brand span {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     display: grid;
     place-items: center;
-    border-radius: 8px;
-    background: var(--primary);
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
 .admin-profile {
     padding: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.04);
 }
 
 .admin-profile strong,
@@ -54,14 +58,19 @@
     display: block;
 }
 
+.admin-profile strong {
+    font-size: 0.92rem;
+}
+
 .admin-profile span {
-    color: #aeb9c7;
-    font-size: 0.86rem;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    margin-top: 2px;
 }
 
 .admin-sidebar nav {
     display: grid;
-    gap: 8px;
+    gap: 4px;
 }
 
 .admin-sidebar nav a,
@@ -69,32 +78,43 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 11px 12px;
-    border-radius: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
     border: 1px solid transparent;
-    color: #cbd5e1;
-    font-weight: 800;
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
 }
 
 .admin-sidebar nav a:hover,
 .admin-sidebar nav a.active,
 .admin-sidebar-footer a:hover {
     color: #fff;
+    background: rgba(37, 99, 235, 0.14);
+    border-color: rgba(37, 99, 235, 0.20);
+}
+
+.admin-sidebar nav a.active {
     background: rgba(37, 99, 235, 0.18);
-    border-color: rgba(148, 163, 184, 0.25);
+    border-color: rgba(37, 99, 235, 0.30);
 }
 
 .admin-sidebar-footer {
     display: grid;
-    gap: 8px;
+    gap: 4px;
     margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* ===== ADMIN MAIN ===== */
 .admin-main {
     min-width: 0;
-    padding: 28px;
+    padding: 28px 32px;
 }
 
+/* Admin pages have NO transitions or animations for professional feel */
 .admin-body *,
 .admin-login-body * {
     transition: none !important;
@@ -110,77 +130,89 @@
     transform: none !important;
 }
 
+/* ===== ADMIN TOP ===== */
 .admin-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
 }
 
 .admin-top h1 {
     margin: 6px 0 0;
     font-family: var(--font-head);
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    line-height: 1;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #0f172a;
 }
 
 .admin-page-note {
-    margin: 8px 0 0;
+    margin: 6px 0 0;
     color: #64748b;
-    font-size: 0.96rem;
+    font-size: 0.88rem;
 }
 
+/* ===== ADMIN STATS ===== */
 .admin-stats {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 .admin-stats article,
 .order-kanban article,
 .admin-card {
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--surface);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius);
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
 .admin-stats article {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px;
+    gap: 14px;
+    padding: 18px;
 }
 
 .admin-stats article:hover,
 .order-kanban article:hover,
 .admin-card:hover {
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.07);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
 }
 
 .admin-stats span {
-    width: 46px;
-    height: 46px;
+    width: 44px;
+    height: 44px;
     display: grid;
     place-items: center;
-    border-radius: 8px;
+    border-radius: 10px;
     color: #fff;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    font-size: 1rem;
+    flex-shrink: 0;
 }
 
 .admin-stats strong {
     display: block;
-    font-size: 1.35rem;
-    color: var(--ink);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.02em;
 }
 
 .admin-stats p {
-    margin: 0;
-    color: var(--muted);
+    margin: 2px 0 0;
+    color: #64748b;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
+/* ===== ADMIN GRID ===== */
 .admin-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.7fr);
@@ -188,7 +220,7 @@
 }
 
 .admin-card {
-    padding: 18px;
+    padding: 20px;
 }
 
 .admin-card-head {
@@ -196,22 +228,27 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
 }
 
 .admin-card h2,
 .admin-card-head h2 {
     margin: 0;
     font-family: var(--font-head);
-    font-size: 1.7rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #0f172a;
 }
 
 .admin-card-head a,
 .admin-card-head span {
     color: var(--primary);
-    font-weight: 800;
+    font-weight: 600;
+    font-size: 0.85rem;
 }
 
+/* ===== ADMIN TABLE ===== */
 .admin-table-wrap {
     overflow-x: auto;
 }
@@ -223,20 +260,24 @@
 
 .admin-table th,
 .admin-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--line);
+    padding: 12px 14px;
+    border-bottom: 1px solid #f1f5f9;
     text-align: left;
     vertical-align: middle;
+    font-size: 0.88rem;
 }
 
 .admin-table th {
-    color: #475569;
-    font-size: 0.82rem;
+    color: #64748b;
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     background: #f8fafc;
 }
 
 .admin-table tbody tr:hover {
-    background: #f8fbff;
+    background: #f8fafc;
 }
 
 .admin-product-cell {
@@ -247,47 +288,51 @@
 }
 
 .admin-product-cell img {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     object-fit: contain;
     border-radius: 8px;
-    background: var(--surface-2);
+    background: #f1f5f9;
+    padding: 2px;
 }
 
 .admin-product-cell span {
     display: block;
-    color: var(--muted);
-    font-size: 0.82rem;
+    color: #64748b;
+    font-size: 0.78rem;
 }
 
+/* ===== STATUS LIST ===== */
 .status-list {
     display: grid;
-    gap: 12px;
+    gap: 10px;
 }
 
 .status-list div {
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: 10px;
-    padding: 12px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--soft);
+    padding: 14px;
+    border: 1px solid #f1f5f9;
+    border-radius: 10px;
+    background: #fafbfc;
 }
 
 .status-list strong {
     grid-column: 2;
+    font-size: 0.9rem;
 }
 
 .status-list p {
     grid-column: 2;
-    margin: 2px 0 0;
-    color: var(--muted);
+    margin: 3px 0 0;
+    color: #64748b;
+    font-size: 0.82rem;
 }
 
 .status-dot {
-    width: 11px;
-    height: 11px;
+    width: 10px;
+    height: 10px;
     display: inline-block;
     border-radius: 999px;
     margin-top: 7px;
@@ -295,42 +340,52 @@
 
 .status-dot.green {
     background: var(--success);
+    box-shadow: 0 0 6px rgba(22, 163, 74, 0.3);
 }
 
 .status-dot.blue {
     background: var(--blue);
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
 }
 
 .status-dot.amber {
     background: var(--warning);
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.3);
 }
 
+/* ===== ADMIN FORM ===== */
 .admin-form-card {
     margin-bottom: 18px;
 }
 
 .admin-product-form {
     display: grid;
-    grid-template-columns: 1.4fr repeat(4, minmax(130px, 1fr)) auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     align-items: end;
+}
+
+.admin-product-form .wide-field {
+    grid-column: 1 / -1;
 }
 
 .admin-product-form label {
     display: grid;
     gap: 6px;
-    color: var(--muted);
-    font-weight: 800;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.85rem;
 }
 
 .admin-product-form input,
 .admin-product-form select {
     min-height: 42px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 8px 10px;
-    color: var(--ink);
-    background: var(--surface);
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: #1e293b;
+    background: #fff;
+    font-size: 0.88rem;
 }
 
 .admin-product-form input:focus,
@@ -338,53 +393,68 @@
 .admin-textarea:focus,
 .inline-order-form select:focus,
 .admin-login-form input:focus {
-    border-color: #93c5fd;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     outline: none;
 }
 
+.admin-textarea {
+    min-height: 110px;
+    resize: vertical;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+/* ===== PILLS ===== */
 .stock-pill,
 .role-pill,
 .status-pill {
     display: inline-flex;
     align-items: center;
-    padding: 5px 9px;
+    padding: 4px 10px;
     border-radius: 999px;
-    font-weight: 800;
-    font-size: 0.82rem;
+    font-weight: 600;
+    font-size: 0.78rem;
 }
 
 .stock-pill {
     color: var(--primary);
-    background: rgba(0, 109, 119, 0.12);
+    background: rgba(37, 99, 235, 0.08);
 }
 
 .role-pill.admin {
     color: var(--accent);
-    background: rgba(239, 35, 60, 0.12);
+    background: rgba(239, 35, 60, 0.08);
 }
 
 .role-pill.user,
 .status-pill.active {
     color: var(--success);
-    background: rgba(22, 163, 74, 0.12);
+    background: rgba(22, 163, 74, 0.08);
 }
 
+.status-pill.locked {
+    color: var(--accent);
+    background: rgba(239, 35, 60, 0.08);
+}
+
+/* ===== ADMIN ACTIONS ===== */
 .admin-actions {
     display: flex;
     gap: 6px;
 }
 
 .admin-actions button {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     display: grid;
     place-items: center;
-    border: 1px solid var(--line);
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
-    color: var(--ink);
-    background: var(--surface);
+    color: #64748b;
+    background: #fff;
     cursor: pointer;
+    font-size: 0.85rem;
 }
 
 .admin-actions button:hover {
@@ -398,6 +468,7 @@
     border-color: var(--accent);
 }
 
+/* ===== ORDER KANBAN ===== */
 .order-kanban {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -412,14 +483,16 @@
 .order-kanban strong {
     display: block;
     margin-top: 8px;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
 }
 
 .order-kanban p {
     margin: 4px 0 0;
-    color: var(--muted);
+    color: #64748b;
+    font-size: 0.85rem;
 }
 
+/* ===== EMPTY ADMIN ===== */
 .empty-admin {
     padding: 48px 18px;
     text-align: center;
@@ -427,15 +500,17 @@
 
 .empty-admin i {
     color: var(--primary);
-    font-size: 2.4rem;
+    font-size: 2.2rem;
 }
 
 .empty-admin p {
     max-width: 620px;
     margin: 8px auto 0;
-    color: var(--muted);
+    color: #64748b;
+    font-size: 0.9rem;
 }
 
+/* ===== USER CELL ===== */
 .user-cell {
     display: flex;
     align-items: center;
@@ -444,36 +519,40 @@
 }
 
 .user-cell > span {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     display: grid;
     place-items: center;
-    border-radius: 8px;
+    border-radius: 10px;
     color: #fff;
-    background: var(--primary);
-    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
 }
 
 .user-cell small {
     display: block;
-    color: var(--muted);
+    color: #64748b;
+    font-size: 0.78rem;
 }
 
+/* ===== ADMIN LOGIN ===== */
 .admin-login-shell {
     min-height: 100vh;
     display: grid;
     place-items: center;
     padding: 24px;
-    background: linear-gradient(180deg, #eaf1f8 0%, #f8fafc 100%);
+    background: linear-gradient(180deg, #f1f5f9 0%, #f8fafc 100%);
 }
 
 .admin-login-card {
-    width: min(430px, 100%);
-    padding: 26px;
-    border: 1px solid #dbe2ea;
-    border-radius: 8px;
+    width: min(420px, 100%);
+    padding: 32px;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-lg);
     background: #fff;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
 }
 
 .back-link {
@@ -481,8 +560,9 @@
     align-items: center;
     gap: 8px;
     color: var(--primary);
-    font-weight: 800;
+    font-weight: 600;
     margin-bottom: 18px;
+    font-size: 0.88rem;
 }
 
 .back-link:hover {
@@ -491,29 +571,34 @@
 
 .admin-login-heading {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .admin-login-heading span {
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
     display: grid;
     place-items: center;
-    margin: 0 auto 10px;
-    border-radius: 8px;
+    margin: 0 auto 12px;
+    border-radius: 14px;
     color: #fff;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
 }
 
 .admin-login-heading h1 {
     margin: 0;
     font-family: var(--font-head);
-    font-size: 2.4rem;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #0f172a;
 }
 
 .admin-login-heading p {
     margin: 6px 0 0;
-    color: var(--muted);
+    color: #64748b;
+    font-size: 0.88rem;
 }
 
 .admin-login-form {
@@ -524,6 +609,8 @@
 .admin-login-form label {
     display: grid;
     gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
 }
 
 .centered {
@@ -531,14 +618,15 @@
 }
 
 .icon-action {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     display: inline-grid;
     place-items: center;
-    border: 1px solid var(--line);
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
-    color: var(--ink);
-    background: var(--surface);
+    color: #64748b;
+    background: #fff;
+    cursor: pointer;
 }
 
 .icon-action:hover {
@@ -552,6 +640,54 @@
     border-color: var(--accent);
 }
 
+/* ===== ADMIN INLINE ===== */
+.admin-actions-inline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-actions-inline form {
+    margin: 0;
+}
+
+.inline-order-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inline-order-form select {
+    min-width: 130px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+/* ===== ORDER STATUS PILLS ===== */
+.order-status.new,
+.order-status.confirmed {
+    color: #b45309;
+    background: rgba(245, 158, 11, 0.10);
+}
+
+.order-status.shipping {
+    color: var(--blue);
+    background: rgba(37, 99, 235, 0.10);
+}
+
+.order-status.completed {
+    color: var(--success);
+    background: rgba(22, 163, 74, 0.08);
+}
+
+.order-status.cancelled {
+    color: var(--accent);
+    background: rgba(239, 35, 60, 0.08);
+}
+
+/* ===== RESPONSIVE ADMIN ===== */
 @media (max-width: 1100px) {
     .admin-layout {
         grid-template-columns: 1fr;
@@ -577,7 +713,7 @@
 
 @media (max-width: 700px) {
     .admin-main {
-        padding: 18px 12px;
+        padding: 18px 14px;
     }
 
     .admin-top {
@@ -593,63 +729,4 @@
     .admin-sidebar-footer {
         grid-template-columns: 1fr;
     }
-}
-
-.admin-product-form {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.admin-product-form .wide-field {
-    grid-column: 1 / -1;
-}
-
-.admin-textarea {
-    min-height: 110px;
-    resize: vertical;
-}
-
-.admin-actions-inline {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.admin-actions-inline form {
-    margin: 0;
-}
-
-.inline-order-form {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.inline-order-form select {
-    min-width: 130px;
-}
-
-.status-pill.locked {
-    color: var(--accent);
-    background: rgba(239, 35, 60, 0.12);
-}
-
-.order-status.new,
-.order-status.confirmed {
-    color: #b45309;
-    background: rgba(245, 158, 11, 0.16);
-}
-
-.order-status.shipping {
-    color: var(--blue);
-    background: rgba(37, 99, 235, 0.14);
-}
-
-.order-status.completed {
-    color: var(--success);
-    background: rgba(22, 163, 74, 0.12);
-}
-
-.order-status.cancelled {
-    color: var(--accent);
-    background: rgba(239, 35, 60, 0.12);
 }

@@ -224,7 +224,7 @@ function render_product_card(array $product, string $returnUrl = ''): void
             </div>
 
             <div class="product-actions">
-                <a class="btn btn-primary" href="<?= $safeUrl ?>">Mua ngay</a>
+                <a class="btn btn-primary" href="<?= $safeUrl ?>"><i class="fa-solid fa-bag-shopping"></i> Mua ngay</a>
                 <form class="product-quick-form" method="post" action="index.php?page=cart_add">
                     <input type="hidden" name="product_id" value="<?= $id ?>">
                     <input type="hidden" name="quantity" value="1">

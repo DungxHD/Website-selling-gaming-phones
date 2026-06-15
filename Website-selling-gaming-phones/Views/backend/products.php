@@ -34,7 +34,12 @@ $buttonText = $editingProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩ
             </div>
 
             <?php if (!empty($data['flash'])): ?>
-                <div class="flash flash-<?= e($data['flash']['type']) ?>"><?= e($data['flash']['message']) ?></div>
+                <script>
+                    window.flashData = {
+                        type: "<?= e($data['flash']['type']) ?>",
+                        message: "<?= e($data['flash']['message']) ?>"
+                    };
+                </script>
             <?php endif; ?>
             <section class="admin-card admin-form-card">
                 <h2><?= $editingProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm' ?></h2>
