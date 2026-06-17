@@ -27,7 +27,6 @@ $isFilterOpen = !empty(array_filter($filters, fn($value) => $value !== '' && $va
                 <div>
                     <span class="eyebrow">Cửa hàng</span>
                     <h1>Danh sách gaming phone</h1>
-                    <p>Bộ lọc chỉ hiển thị trong trang cửa hàng và khi người dùng chuyển sang trang danh sách sản phẩm.</p>
                 </div>
                 <button class="btn btn-primary" type="button" data-filter-toggle>
                     <i class="fa-solid fa-sliders"></i> Tìm kiếm nâng cao

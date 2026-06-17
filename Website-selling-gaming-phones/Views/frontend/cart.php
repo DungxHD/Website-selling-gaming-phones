@@ -22,7 +22,6 @@ $cartTotal = (int)($data['cartTotal'] ?? 0);
             <div>
                 <span class="eyebrow">Giỏ hàng PHP</span>
                 <h1>Sản phẩm bạn đã chọn</h1>
-                <p>Số lượng, xóa sản phẩm và tổng tiền được xử lý bằng PHP session, không dùng giỏ hàng JavaScript.</p>
             </div>
             <a class="btn btn-soft" href="index.php?page=shop"><i class="fa-solid fa-arrow-left"></i> Tiếp tục mua</a>
         </div>

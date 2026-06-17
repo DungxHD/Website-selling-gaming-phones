@@ -204,7 +204,8 @@ function showToast(type, message) {
     
     toast.innerHTML = `
         <i class="fa-solid ${iconClass}"></i>
-        <div>${message}</div>
+        <div style="flex: 1">${message}</div>
+        <button class="toast-close" onclick="this.parentElement.classList.remove('show'); this.parentElement.classList.add('hide'); setTimeout(() => this.parentElement.remove(), 500);"><i class="fa-solid fa-xmark"></i></button>
     `;
     
     container.appendChild(toast);
@@ -212,16 +213,18 @@ function showToast(type, message) {
     // Thêm class show để thực hiện animation xuất hiện
     toast.classList.add('show');
     
-    // Tự động ẩn sau 4 giây
+    // Tự động ẩn sau 3 giây
     setTimeout(() => {
-        toast.classList.remove('show');
-        toast.classList.add('hide'); // Thêm class hide để thực hiện animation biến mất
-        
-        // Chờ animation hide kết thúc rồi xóa khỏi DOM (500ms theo CSS)
-        setTimeout(() => {
-            toast.remove();
-        }, 500); 
-    }, 4000);
+        if(toast.parentElement) {
+            toast.classList.remove('show');
+            toast.classList.add('hide'); // Thêm class hide để thực hiện animation biến mất
+            
+            // Chờ animation hide kết thúc rồi xóa khỏi DOM (500ms theo CSS)
+            setTimeout(() => {
+                if(toast.parentElement) toast.remove();
+            }, 500); 
+        }
+    }, 3000);
 }
 
 function initAjaxCart() {

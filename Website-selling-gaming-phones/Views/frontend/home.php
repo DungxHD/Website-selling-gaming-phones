@@ -28,7 +28,6 @@ $hero = $deals[0] ?? $products[0] ?? null;
                 <div class="hero-copy">
                     <span class="eyebrow">Gaming phone chính hãng</span>
                     <h1>Chọn máy chiến game theo hiệu năng thật.</h1>
-                    <p>Lọc nhanh theo hãng, chip, giá và tình trạng máy. Danh sách sản phẩm bên dưới được lấy trực tiếp từ database của bạn.</p>
                     <div class="hero-actions">
                         <a href="index.php?page=shop" class="btn btn-primary"><i class="fa-solid fa-store"></i> Vào cửa hàng</a>
                         <?php if ($hero): ?>

@@ -22,7 +22,7 @@ $orderStats = $data['orderStats'] ?? [];
             <div>
                 <span class="eyebrow">Thanh toán</span>
                 <h1>Quản lý đơn hàng</h1>
-                <p class="admin-page-note">Kiểm tra trạng thái đơn và cập nhật giao hàng bằng bảng danh sách rõ ràng, ít hiệu ứng gây rối mắt.</p>
+                <p class="admin-page-note">Kiểm tra trạng thái đơn và cập nhật giao hàng.</p>
             </div>
             <button class="btn btn-soft" type="button"><i class="fa-solid fa-receipt"></i> Tổng đơn: <?= number_format($orderStats['orderCount'] ?? 0) ?></button>
         </div>
@@ -95,7 +95,6 @@ $orderStats = $data['orderStats'] ?? [];
                 <div class="empty-admin">
                     <i class="fa-solid fa-clipboard-list"></i>
                     <h3>Chưa có đơn hàng trong hệ thống</h3>
-                    <p>Khi người dùng thanh toán ở frontend, đơn hàng sẽ được lưu vào bảng orders và hiển thị tại đây để admin cập nhật giao hàng.</p>
                 </div>
             <?php endif; ?>
         </section>

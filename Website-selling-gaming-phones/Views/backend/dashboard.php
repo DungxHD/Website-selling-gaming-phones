@@ -23,7 +23,7 @@ $latestOrders = $data['latestOrders'] ?? [];
             <div>
                 <span class="eyebrow">Bảng điều khiển</span>
                 <h1>Thống kê tổng quan</h1>
-                <p class="admin-page-note">Theo dõi nhanh tình trạng sản phẩm, đơn hàng, người dùng và doanh thu ngay trên một màn hình.</p>
+                <p class="admin-page-note">Theo dõi nhanh tình trạng sản phẩm, đơn hàng, người dùng và doanh thu.</p>
             </div>
             <a href="index.php?page=admin_products" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Quản lý sản phẩm</a>
         </div>
@@ -103,6 +103,8 @@ $latestOrders = $data['latestOrders'] ?? [];
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/admin_ajax.js"></script>
 </body>
 </html>

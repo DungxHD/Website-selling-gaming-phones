@@ -27,9 +27,6 @@ $currentPage = $data['page'] ?? 'register';
                     <h2 style="margin: 6px 0 4px; font-family: var(--font-head); font-size: 2rem;">
                         Đăng ký thành viên Gaming Phone
                     </h2>
-                    <p style="color: var(--muted); margin: 0;">
-                        Thông tin được lưu vào bảng <code>users</code> với vai trò mặc định là người dùng.
-                    </p>
                 </div>
 
                 <form class="auth-form" method="post" action="index.php?page=register" autocomplete="on">
